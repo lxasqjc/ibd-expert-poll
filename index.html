@@ -8,89 +8,106 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.6;
-  color: #333;
-  background: #f5f7fa;
-  padding: 20px;
+  line-height: 1.6; color: #333; background: #f5f7fa; padding: 20px;
 }
-.container { max-width: 920px; margin: 0 auto; }
-h1 { color: #1a365d; margin-bottom: 10px; font-size: 1.6em; }
-h2 { color: #2d3748; margin: 30px 0 15px; font-size: 1.3em; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-h3 { color: #4a5568; margin: 20px 0 10px; font-size: 1.1em; }
-.intro { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #3182ce; }
-.intro p { margin-bottom: 10px; }
-.question-block {
-  background: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+.container { max-width: 900px; margin: 0 auto; }
+h1 { color: #1a365d; margin-bottom: 8px; font-size: 1.5em; }
+h2 { color: #2d3748; margin: 25px 0 12px; font-size: 1.25em; }
+h3 { color: #4a5568; margin: 18px 0 8px; font-size: 1.05em; }
+
+/* Cards */
+.card {
+  background: #fff; padding: 24px; border-radius: 10px; margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
-.question-text { font-weight: 600; color: #2d3748; margin-bottom: 15px; font-size: 1.05em; }
-.response-panel {
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  overflow: hidden;
-}
+.card-accent { border-left: 4px solid #3182ce; }
+.card-highlight { border: 2px solid #3182ce; background: #ebf8ff; }
+
+/* Landing */
+.landing { text-align: center; padding: 40px 20px; }
+.landing h1 { font-size: 2em; margin-bottom: 16px; }
+.landing p { color: #4a5568; max-width: 600px; margin: 0 auto 12px; font-size: 1.05em; }
+.landing .steps { text-align: left; max-width: 500px; margin: 30px auto; }
+.landing .step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.step-num { background: #3182ce; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
+.step-text { padding-top: 3px; }
+
+/* Responses */
+.response-panel { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
 .response-header {
-  background: #edf2f7;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
+  background: #edf2f7; padding: 12px 16px; cursor: pointer; font-weight: 600;
+  display: flex; justify-content: space-between; align-items: center; user-select: none;
 }
 .response-header:hover { background: #e2e8f0; }
-.response-header .toggle { color: #718096; font-size: 0.9em; }
 .response-body {
-  padding: 15px;
-  display: none;
-  white-space: pre-wrap;
-  font-size: 0.92em;
-  max-height: 600px;
-  overflow-y: auto;
-  background: #fafbfc;
-  border-top: 1px solid #e2e8f0;
+  padding: 16px; display: none; white-space: pre-wrap; font-size: 0.91em;
+  max-height: 500px; overflow-y: auto; background: #fafbfc; border-top: 1px solid #e2e8f0;
 }
 .response-body.expanded { display: block; }
-.scoring-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; }
-.score-row { display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-.score-label { width: 160px; font-size: 0.9em; color: #4a5568; }
-.score-input { width: 60px; padding: 5px 8px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-size: 0.95em; }
-.ranking-section { margin-top: 15px; }
-.rank-row { display: flex; align-items: center; margin-bottom: 8px; gap: 10px; }
-.rank-row label { font-size: 0.9em; width: 100px; }
-.rank-row select { padding: 5px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.95em; }
-.confidence-row { margin-top: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.confidence-row label { font-size: 0.9em; color: #4a5568; }
-.confidence-slider { width: 200px; }
-.confidence-val { font-weight: 600; width: 30px; text-align: center; }
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 0.92em;
-  resize: vertical;
-  min-height: 80px;
+
+/* Score buttons */
+.score-group { margin-bottom: 16px; }
+.score-group-label { font-size: 0.88em; color: #4a5568; margin-bottom: 6px; font-weight: 600; }
+.score-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
+.score-btn {
+  width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 8px;
+  background: #fff; cursor: pointer; font-weight: 600; font-size: 0.9em;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; color: #4a5568;
 }
-.q12-scores { margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
-.q12-scores p { font-weight: 600; margin-bottom: 10px; }
-.checkbox-row { margin-top: 8px; }
-.checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-.btn-group { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+.score-btn:hover { border-color: #3182ce; background: #ebf8ff; }
+.score-btn.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
+.score-btn.low { border-color: #feb2b2; }
+.score-btn.low.selected { background: #e53e3e; border-color: #e53e3e; }
+.score-btn.mid { border-color: #fbd38d; }
+.score-btn.mid.selected { background: #d69e2e; border-color: #d69e2e; }
+.score-btn.high { border-color: #9ae6b4; }
+.score-btn.high.selected { background: #38a169; border-color: #38a169; }
+
+/* Ranking */
+.rank-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.rank-option {
+  border: 2px solid #e2e8f0; border-radius: 10px; padding: 14px 20px;
+  cursor: pointer; text-align: center; min-width: 100px;
+  transition: all 0.15s; background: #fff;
+}
+.rank-option:hover { border-color: #3182ce; background: #ebf8ff; }
+.rank-option.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
+.rank-option .rank-label { font-size: 0.82em; color: #718096; margin-bottom: 2px; }
+.rank-option.selected .rank-label { color: #bee3f8; }
+.rank-option .rank-response { font-weight: 700; font-size: 1.1em; }
+
+/* Navigation */
+.nav-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 2px; }
+.nav-tab {
+  padding: 9px 13px; cursor: pointer; border-radius: 6px 6px 0 0;
+  font-size: 0.85em; color: #718096; transition: all 0.2s;
+}
+.nav-tab:hover { background: #edf2f7; }
+.nav-tab.active { background: #3182ce; color: #fff; }
+.nav-tab.completed { background: #c6f6d5; color: #276749; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Progress */
+.progress-bar { background: #e2e8f0; border-radius: 10px; height: 8px; margin: 12px 0; overflow: hidden; }
+.progress-fill { background: linear-gradient(90deg, #3182ce, #38a169); height: 100%; transition: width 0.4s; }
+
+/* Hint bubble */
+.hint {
+  background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px;
+  padding: 12px 16px; margin-bottom: 16px; font-size: 0.9em; color: #2c5282;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.hint-icon { font-size: 1.2em; flex-shrink: 0; }
+.hint-dismiss { margin-left: auto; cursor: pointer; color: #90cdf4; font-weight: 700; }
+.hint-dismiss:hover { color: #3182ce; }
+
+/* Buttons */
+.btn-group { margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap; }
 .btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding: 11px 22px; border: none; border-radius: 8px; font-size: 0.95em;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
 }
 .btn-primary { background: #3182ce; color: #fff; }
 .btn-primary:hover { background: #2c5282; }
@@ -98,76 +115,93 @@ textarea {
 .btn-secondary:hover { background: #e2e8f0; }
 .btn-success { background: #38a169; color: #fff; }
 .btn-success:hover { background: #2f855a; }
-.btn-danger { background: #e53e3e; color: #fff; }
-.btn-danger:hover { background: #c53030; }
-.progress-bar { background: #e2e8f0; border-radius: 10px; height: 8px; margin: 15px 0; overflow: hidden; }
-.progress-fill { background: #3182ce; height: 100%; transition: width 0.3s; }
-.nav-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 2px; }
-.nav-tab {
-  padding: 10px 14px;
-  cursor: pointer;
-  border-radius: 6px 6px 0 0;
-  font-size: 0.88em;
-  color: #718096;
-  transition: all 0.2s;
+.btn-lg { padding: 14px 36px; font-size: 1.05em; }
+
+textarea {
+  width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px;
+  font-family: inherit; font-size: 0.92em; resize: vertical; min-height: 80px;
 }
-.nav-tab:hover { background: #edf2f7; }
-.nav-tab.active { background: #3182ce; color: #fff; }
-.nav-tab.completed { background: #c6f6d5; color: #276749; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.reviewer-info { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
-.reviewer-info input { padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; width: 280px; font-size: 0.95em; }
 .hidden { display: none; }
-.export-area { margin-top: 20px; background: #1a202c; color: #a0aec0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.82em; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
 .toast {
-  position: fixed; bottom: 30px; right: 30px; background: #38a169; color: #fff;
-  padding: 12px 20px; border-radius: 8px; font-weight: 600; z-index: 1000;
-  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  position: fixed; bottom: 30px; right: 30px; background: #2d3748; color: #fff;
+  padding: 12px 20px; border-radius: 8px; font-weight: 500; z-index: 1000;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; font-size: 0.9em;
 }
 .toast.show { opacity: 1; }
-.submit-status { margin-top: 15px; padding: 12px; border-radius: 6px; }
-.submit-status.success { background: #c6f6d5; color: #276749; }
-.submit-status.error { background: #fed7d7; color: #c53030; }
+.export-area { margin-top: 15px; background: #1a202c; color: #a0aec0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.8em; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
+.checkbox-row { margin-top: 10px; }
+.checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.q12-scores { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Expert Blind Evaluation</h1>
-  <p style="color:#718096; margin-bottom:20px;">Crohn's Fistula — Spatial Transcriptomics Agent Responses</p>
+  <!-- LANDING PAGE -->
+  <div id="landing-page">
+    <div class="landing">
+      <h1>Expert Blind Evaluation</h1>
+      <p>Crohn's Fistula — Spatial Transcriptomics</p>
+      <p style="color:#718096; font-size:0.92em;">Thank you for participating. Your expert assessment helps validate AI-assisted biological interpretation.</p>
 
-  <div class="intro">
-    <p><strong>Context:</strong> You are evaluating responses to biological interpretation questions about Crohn's disease fistula tissue, generated by AI systems with different levels of data access. Responses are blinded — you do not know which system produced which response.</p>
-    <p><strong>Data studied:</strong> Xenium 5100-plex (~1.86M cells), Xenium 480-plex (~6.3M cells), Visium spatial transcriptomics, and scRNA-seq reference from IBD patients (healthy, diseased non-fistulising, fistulising, diverticular).</p>
-    <p><strong>Your task:</strong> For each question, read all responses, then rank them and score your confidence. You can save progress at any time and return later. When finished, click Submit.</p>
-    <p><strong>Time estimate:</strong> ~60-90 minutes total. You can complete it across multiple sessions.</p>
+      <div class="card card-accent" style="text-align:left; margin-top:30px;">
+        <h3 style="margin-top:0;">What you'll be evaluating</h3>
+        <p style="font-size:0.92em; margin-bottom:10px;">Three AI systems answered biological questions about Crohn's disease fistula using spatial transcriptomics data (Xenium 5100-plex, 1.86M cells; Xenium 480-plex, 6.3M cells; Visium; scRNA-seq).</p>
+        <p style="font-size:0.92em;">Responses are <strong>blinded</strong> — you won't know which system produced which answer. Labels (X, Y, Z) are randomized per question.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Read</strong> each response (expand panels to view)</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Score</strong> each response on Accuracy and Novelty (1-10)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Rank</strong> the responses (best to worst)</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Repeat</strong> for 11 questions (~60-90 min total, can pause anytime)</div></div>
+      </div>
+
+      <div class="card" style="text-align:left; margin-top:20px;">
+        <h3 style="margin-top:0;">Scoring criteria</h3>
+        <p style="font-size:0.92em; margin-bottom:8px;"><strong>Accuracy (factfulness)</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
+        <p style="font-size:0.92em;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to those that would be discovered in a research paper on this topic? (vs generic textbook knowledge)</p>
+      </div>
+
+      <div class="card" style="text-align:left; margin-top:15px;">
+        <h3 style="margin-top:0;">Before we begin</h3>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:4px;">Your name:</label>
+          <input type="text" id="reviewer-name" placeholder="e.g. Dr. Smith" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; width:100%; max-width:300px; font-size:0.95em;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:4px;">Your expertise area:</label>
+          <input type="text" id="reviewer-expertise" placeholder="e.g. Spatial biology, IBD, Immunology" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; width:100%; max-width:300px; font-size:0.95em;">
+        </div>
+        <div>
+          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:6px;">Your confidence in the field of Crohn's fistula (0 = no familiarity, 10 = similar to leading authors on IBD papers):</label>
+          <div class="score-buttons" id="field-confidence-btns"></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-lg" style="margin-top:25px;" onclick="startReview()">Begin Evaluation</button>
+    </div>
   </div>
 
-  <div class="reviewer-info">
-    <input type="text" id="reviewer-name" placeholder="Your name">
-    <input type="text" id="reviewer-expertise" placeholder="Area of expertise (e.g. spatial biology, IBD)">
-  </div>
+  <!-- MAIN REVIEW -->
+  <div id="review-page" class="hidden">
+    <h1>Expert Blind Evaluation</h1>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <p id="progress-text" style="font-size:0.83em; color:#718096; margin-bottom:12px;">0 / 0 questions completed</p>
 
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
-  <p id="progress-text" style="font-size:0.85em; color:#718096; margin-bottom:15px;">0 / 0 questions completed</p>
+    <div class="nav-tabs" id="nav-tabs"></div>
+    <div id="questions-container"></div>
 
-  <div class="nav-tabs" id="nav-tabs"></div>
-  <div id="questions-container"></div>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="prevQuestion()">Previous</button>
+      <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+      <button class="btn btn-secondary" onclick="saveProgress()">Save Progress</button>
+      <button class="btn btn-success" onclick="submitResults()">Submit</button>
+    </div>
 
-  <div class="btn-group">
-    <button class="btn btn-primary" onclick="prevQuestion()">Previous</button>
-    <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
-    <button class="btn btn-secondary" onclick="saveProgress()">Save Progress</button>
-    <button class="btn btn-success" onclick="submitResults()">Submit Results</button>
-    <button class="btn btn-secondary" onclick="exportJSON()">Export JSON</button>
-  </div>
-
-  <div id="submit-status" class="hidden"></div>
-
-  <div id="export-container" class="hidden">
-    <h3 style="margin-top:20px;">Exported Results</h3>
-    <div class="export-area" id="export-area"></div>
-    <button class="btn btn-secondary" style="margin-top:10px;" onclick="copyExport()">Copy to Clipboard</button>
+    <div id="export-container" class="hidden">
+      <div class="export-area" id="export-area"></div>
+      <button class="btn btn-secondary" style="margin-top:8px;" onclick="copyExport()">Copy JSON</button>
+    </div>
   </div>
 </div>
 
@@ -175,59 +209,82 @@ textarea {
 
 <script>
 // ============================================================
-// CONFIGURATION
+// CONFIG
 // ============================================================
-
-// Backend endpoint for collecting results.
-// Option 1: Google Apps Script web app URL (deploy as web app, anyone can access)
-// Option 2: Formspree endpoint (formspree.io — free tier: 50 submissions/month)
-// Set to null to disable auto-submission (reviewer will export JSON manually)
-const BACKEND_URL = null; // Replace with your endpoint when ready
-
-// Auto-save interval (ms) — saves to localStorage every 60s
-const AUTOSAVE_INTERVAL = 60000;
+const BACKEND_URL = null; // Set to Google Apps Script URL when ready
+const AUTOSAVE_INTERVAL = 30000; // 30s auto-save
 
 // ============================================================
-// POLL DATA — populated by assemble_expert_poll.py
-// Replace this entire object with actual blinded responses
+// POLL DATA — replace with actual responses via assemble_expert_poll.py
 // ============================================================
 const POLL_DATA = {
   metadata: {
     study: "Crohn's Fistula IBD - Spatial Transcriptomics",
     date_created: "2026-08-08",
-    n_questions: 11,
     arms: ["X", "Y", "Z"],
-    note: "Labels X/Y/Z are randomized per question. Do NOT attempt to identify which system produced which response."
+    note: "Labels randomized per question."
   },
   questions: [
-    {id: "Q1", type: "ranking", text: "What are the fibroblast subtypes and what are their biological significance? What are their marker genes & key pathways?", responses: {"X": "[Placeholder — will be populated with actual blinded responses]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q2", type: "ranking", text: "Based on the data, how do different types of fibroblasts interact and drive fistula formation in Crohn's disease?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q3", type: "ranking", text: "What do the TWIST1 overexpressed fibroblasts in the gut do?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q4", type: "ranking", text: "What changes do you observe in epithelium in fistula formation? Any difference in epithelium on healthy VS diseased but not fistulising VS fistulising samples?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q5", type: "ranking", text: "On the colon samples, compare the difference between Crohn's fistula and diverticular fistula.", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q6", type: "ranking", text: "How does the location of fistula affect the inflammatory signature? For instance, does the signature becomes more myeloid, more lymphoid, more cytotoxic, or more innate, as fistula location changes?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q7", type: "ranking", text: "How does the epithelialisation of fistula affect other cells? For instance, do other cells become more fibrotic or inflammatory?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q8", type: "ranking", text: "What is the adaptive immune response you get in fistula? Can you differentiate strongly inflammatory fistula and stabilised ones?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q9", type: "ranking", text: "Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signatures?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q11", type: "ranking", text: "What is the difference in macrophage state of healthy vs fistula samples?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
-    {id: "Q12", type: "hypothesis", text: "Each system was asked to propose novel research directions for Crohn's disease based on the available data. Below are their proposals. Select which you think are worth investigating, and which you are already investigating.", responses: {"X": "[Placeholder — hypothesis proposals from system X]", "Y": "[Placeholder — hypothesis proposals from system Y]", "Z": "[Placeholder — hypothesis proposals from system Z]"}}
+    {id:"Q1", type:"ranking", text:"What are the fibroblast subtypes and what are their biological significance? What are their marker genes & key pathways?", responses:{"X":"[Placeholder — actual responses will be populated]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q2", type:"ranking", text:"Based on the data, how do different types of fibroblasts interact and drive fistula formation in Crohn's disease?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q3", type:"ranking", text:"What do the TWIST1 overexpressed fibroblasts in the gut do?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q4", type:"ranking", text:"What changes do you observe in epithelium in fistula formation? Any difference in epithelium on healthy VS diseased but not fistulising VS fistulising samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q5", type:"ranking", text:"On the colon samples, compare the difference between Crohn's fistula and diverticular fistula.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q6", type:"ranking", text:"How does the location of fistula affect the inflammatory signature? For instance, does the signature becomes more myeloid, more lymphoid, more cytotoxic, or more innate, as fistula location changes?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q7", type:"ranking", text:"How does the epithelialisation of fistula affect other cells? For instance, do other cells become more fibrotic or inflammatory?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q8", type:"ranking", text:"What is the adaptive immune response you get in fistula? Can you differentiate strongly inflammatory fistula and stabilised ones?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q9", type:"ranking", text:"Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signatures?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q11", type:"ranking", text:"What is the difference in macrophage state of healthy vs fistula samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q12", type:"hypothesis", text:"Each system was asked to propose novel research directions for Crohn's disease from the data. Review their proposals below.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}}
   ],
-  final_question: {
-    id: "FINAL",
-    type: "open",
-    text: "Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?"
-  }
+  final_question: {id:"FINAL", type:"open", text:"Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?"}
 };
 
 // ============================================================
 // STATE
 // ============================================================
 let currentTab = 0;
-let autoSaveTimer = null;
+let hintsShown = {};
 
 function init() {
+  // Build field confidence buttons on landing
+  const confBtns = document.getElementById('field-confidence-btns');
+  for (let i = 0; i <= 10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'score-btn' + (i <= 3 ? ' low' : i <= 6 ? ' mid' : ' high');
+    btn.textContent = i;
+    btn.onclick = () => selectFieldConfidence(i);
+    btn.id = `fc-btn-${i}`;
+    confBtns.appendChild(btn);
+  }
+
+  // Try to restore
+  loadProgress();
+}
+
+function selectFieldConfidence(val) {
+  document.querySelectorAll('#field-confidence-btns .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`fc-btn-${val}`).classList.add('selected');
+}
+
+function startReview() {
+  const name = document.getElementById('reviewer-name').value.trim();
+  if (!name) { alert('Please enter your name to continue.'); return; }
+
+  const confBtn = document.querySelector('#field-confidence-btns .score-btn.selected');
+  if (!confBtn) { alert('Please rate your confidence in Crohn\'s fistula (0-10).'); return; }
+
+  document.getElementById('landing-page').classList.add('hidden');
+  document.getElementById('review-page').classList.remove('hidden');
+  buildReviewUI();
+  saveProgressSilent();
+}
+
+function buildReviewUI() {
   const container = document.getElementById('questions-container');
   const tabs = document.getElementById('nav-tabs');
+  container.innerHTML = '';
+  tabs.innerHTML = '';
 
   POLL_DATA.questions.forEach((q, idx) => {
     const tab = document.createElement('div');
@@ -239,187 +296,233 @@ function init() {
     const content = document.createElement('div');
     content.className = 'tab-content';
     content.id = `tab-${idx}`;
-    content.innerHTML = q.type === 'ranking' ? buildRankingQuestion(q) : buildHypothesisQuestion(q);
+    content.innerHTML = q.type === 'ranking' ? buildRankingQ(q) : buildHypothesisQ(q);
     container.appendChild(content);
   });
 
-  // Final question tab
-  const finalTab = document.createElement('div');
-  finalTab.className = 'nav-tab';
-  finalTab.textContent = 'Final';
-  finalTab.onclick = () => switchTab(POLL_DATA.questions.length);
-  tabs.appendChild(finalTab);
+  // Final tab
+  const ft = document.createElement('div');
+  ft.className = 'nav-tab';
+  ft.textContent = 'Final';
+  ft.onclick = () => switchTab(POLL_DATA.questions.length);
+  tabs.appendChild(ft);
 
-  const finalContent = document.createElement('div');
-  finalContent.className = 'tab-content';
-  finalContent.id = `tab-${POLL_DATA.questions.length}`;
-  finalContent.innerHTML = buildFinalQuestion();
-  container.appendChild(finalContent);
+  const fc = document.createElement('div');
+  fc.className = 'tab-content';
+  fc.id = `tab-${POLL_DATA.questions.length}`;
+  fc.innerHTML = buildFinalQ();
+  container.appendChild(fc);
 
   switchTab(0);
-  loadProgress();
   updateProgress();
-
-  // Auto-save
-  autoSaveTimer = setInterval(() => {
-    saveProgressSilent();
-  }, AUTOSAVE_INTERVAL);
+  setInterval(saveProgressSilent, AUTOSAVE_INTERVAL);
 }
 
-function buildRankingQuestion(q) {
+function buildRankingQ(q) {
   const labels = Object.keys(q.responses);
-  let html = `<div class="question-block">
-    <div class="question-text">${q.id}: ${q.text}</div>
-    <h3>Responses (click to expand):</h3>`;
+  let html = `<div class="card">
+    <div class="hint" id="hint-${q.id}">
+      <span class="hint-icon">i</span>
+      <span>Read all ${labels.length} responses below, then score each on Accuracy & Novelty, and finally rank them.</span>
+      <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
+    </div>
+    <h2>${q.id}: ${q.text}</h2>
+    <h3 style="margin-top:20px;">Step 1: Read the responses</h3>`;
 
   labels.forEach(label => {
     html += `<div class="response-panel">
       <div class="response-header" onclick="toggleResponse(this)">
-        <span>Response ${label}</span><span class="toggle">Click to expand</span>
+        <span>Response ${label}</span><span style="color:#718096; font-size:0.85em;">Click to expand</span>
       </div>
       <div class="response-body">${escapeHtml(q.responses[label])}</div>
     </div>`;
   });
 
-  html += `<div class="scoring-section">
-    <h3>Ranking (1 = best, ${labels.length} = worst):</h3>
-    <div class="ranking-section">`;
+  html += `<h3>Step 2: Score each response</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:12px;">Rate independently (1 = poor, 10 = excellent)</p>`;
 
   labels.forEach(label => {
-    html += `<div class="rank-row">
-      <label>Response ${label}:</label>
-      <select id="rank-${q.id}-${label}" onchange="updateProgress()">
-        <option value="">--</option>
-        ${labels.map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
-      </select>
-    </div>`;
+    html += `<div style="margin-bottom:18px; padding:12px; background:#f7fafc; border-radius:8px;">
+      <strong style="font-size:0.95em;">Response ${label}</strong>
+      <div class="score-group" style="margin-top:8px;">
+        <div class="score-group-label">Accuracy (factfulness):</div>
+        <div class="score-buttons" id="score-acc-${q.id}-${label}">`;
+    for (let i = 1; i <= 10; i++) {
+      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
+      html += `<button class="score-btn ${cls}" onclick="selectScore('acc','${q.id}','${label}',${i})">${i}</button>`;
+    }
+    html += `</div></div>
+      <div class="score-group">
+        <div class="score-group-label">Novelty (non-trivialness of findings):</div>
+        <div class="score-buttons" id="score-nov-${q.id}-${label}">`;
+    for (let i = 1; i <= 10; i++) {
+      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
+      html += `<button class="score-btn ${cls}" onclick="selectScore('nov','${q.id}','${label}',${i})">${i}</button>`;
+    }
+    html += `</div></div></div>`;
   });
 
-  html += `</div>
-    <h3 style="margin-top:20px;">Dimension scores (1-10, optional but helpful):</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Rate each response independently:</p>`;
+  html += `<h3>Step 3: Rank overall (best to worst)</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">Which response is best overall? Click to assign rank.</p>`;
 
-  const dims = ['Accuracy', 'Novelty', 'Relevance'];
-  labels.forEach(label => {
-    html += `<div style="margin-bottom:12px;"><strong>Response ${label}:</strong><div class="score-row" style="margin-top:5px;">`;
-    dims.forEach(dim => {
-      html += `<span class="score-label">${dim}:</span>
-        <input type="number" class="score-input" id="score-${q.id}-${label}-${dim}" min="1" max="10" placeholder="-">`;
+  for (let rank = 1; rank <= labels.length; rank++) {
+    const rankLabel = rank === 1 ? 'Best' : rank === labels.length ? 'Worst' : `#${rank}`;
+    html += `<div style="margin-bottom:10px;">
+      <span style="font-size:0.88em; color:#4a5568; font-weight:600;">${rankLabel}:</span>
+      <div class="rank-options" id="rank-${q.id}-${rank}">`;
+    labels.forEach(label => {
+      html += `<div class="rank-option" onclick="selectRank('${q.id}',${rank},'${label}')">
+        <div class="rank-response">${label}</div>
+      </div>`;
     });
     html += `</div></div>`;
-  });
+  }
 
-  html += `<div class="confidence-row">
-      <label>Your confidence in this ranking (0 = guessing, 10 = certain):</label>
-      <input type="range" class="confidence-slider" id="confidence-${q.id}" min="0" max="10" value="5" oninput="updateConfVal(this)">
-      <span class="confidence-val" id="conf-val-${q.id}">5</span>
-    </div>
-    <h3 style="margin-top:20px;">Notes (optional):</h3>
-    <textarea id="notes-${q.id}" placeholder="What stood out? Why this ranking?"></textarea>
-  </div></div>`;
+  html += `<h3 style="margin-top:20px;">Notes (optional)</h3>
+    <textarea id="notes-${q.id}" placeholder="What stood out? Anything surprising?"></textarea>
+  </div>`;
   return html;
 }
 
-function buildHypothesisQuestion(q) {
+function buildHypothesisQ(q) {
   const labels = Object.keys(q.responses);
-  let html = `<div class="question-block">
-    <div class="question-text">${q.id}: Hypothesis Generation</div>
+  let html = `<div class="card">
+    <div class="hint">
+      <span class="hint-icon">i</span>
+      <span>This question tests hypothesis generation. Read each system's proposals, then indicate which are worth pursuing or already being investigated.</span>
+      <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
+    </div>
+    <h2>${q.id}: Hypothesis Generation</h2>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:15px;">${q.text}</p>`;
 
   labels.forEach(label => {
     html += `<div class="response-panel">
       <div class="response-header" onclick="toggleResponse(this)">
-        <span>System ${label} — Proposed Directions</span><span class="toggle">Click to expand</span>
+        <span>System ${label} — Proposed Directions</span><span style="color:#718096; font-size:0.85em;">Click to expand</span>
       </div>
       <div class="response-body">${escapeHtml(q.responses[label])}
         <div class="q12-scores">
-          <p>Rate System ${label}'s proposals:</p>
-          <div class="score-row">
-            <span class="score-label">Novelty (1-10):</span>
-            <input type="number" class="score-input" id="hyp-novelty-${q.id}-${label}" min="1" max="10" placeholder="-">
-            <span class="score-label">Feasibility (1-10):</span>
-            <input type="number" class="score-input" id="hyp-feasibility-${q.id}-${label}" min="1" max="10" placeholder="-">
-            <span class="score-label">Relevance (1-10):</span>
-            <input type="number" class="score-input" id="hyp-relevance-${q.id}-${label}" min="1" max="10" placeholder="-">
-          </div>
-          <div class="checkbox-row">
-            <label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> Contains directions we are <strong>already investigating</strong></label>
-          </div>
-          <div class="checkbox-row">
-            <label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> Contains directions <strong>worth pursuing</strong> (new to us)</label>
-          </div>
+          <div class="score-group">
+            <div class="score-group-label">Novelty of proposals (1-10):</div>
+            <div class="score-buttons" id="score-hyp-nov-${q.id}-${label}">`;
+    for (let i = 1; i <= 10; i++) {
+      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
+      html += `<button class="score-btn ${cls}" onclick="selectScore('hyp-nov','${q.id}','${label}',${i})">${i}</button>`;
+    }
+    html += `</div></div>
+          <div class="score-group">
+            <div class="score-group-label">Feasibility (1-10):</div>
+            <div class="score-buttons" id="score-hyp-feas-${q.id}-${label}">`;
+    for (let i = 1; i <= 10; i++) {
+      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
+      html += `<button class="score-btn ${cls}" onclick="selectScore('hyp-feas','${q.id}','${label}',${i})">${i}</button>`;
+    }
+    html += `</div></div>
+          <div class="checkbox-row"><label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> Contains directions we are <strong>already investigating</strong></label></div>
+          <div class="checkbox-row"><label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> Contains directions <strong>worth pursuing</strong> (new to us)</label></div>
         </div>
       </div>
     </div>`;
   });
 
-  html += `<div class="scoring-section">
-    <h3>Overall ranking of hypothesis quality (1 = best proposals, ${labels.length} = worst):</h3>
-    <div class="ranking-section">`;
+  html += `<h3>Rank hypothesis quality (best to worst)</h3>`;
+  for (let rank = 1; rank <= labels.length; rank++) {
+    const rankLabel = rank === 1 ? 'Best' : rank === labels.length ? 'Worst' : `#${rank}`;
+    html += `<div style="margin-bottom:10px;">
+      <span style="font-size:0.88em; color:#4a5568; font-weight:600;">${rankLabel}:</span>
+      <div class="rank-options" id="rank-${q.id}-${rank}">`;
+    labels.forEach(label => {
+      html += `<div class="rank-option" onclick="selectRank('${q.id}',${rank},'${label}')">
+        <div class="rank-response">${label}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
 
-  labels.forEach(label => {
-    html += `<div class="rank-row">
-      <label>System ${label}:</label>
-      <select id="rank-${q.id}-${label}" onchange="updateProgress()">
-        <option value="">--</option>
-        ${labels.map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
-      </select>
-    </div>`;
-  });
-
-  html += `</div>
-    <div class="confidence-row">
-      <label>Your confidence (0-10):</label>
-      <input type="range" class="confidence-slider" id="confidence-${q.id}" min="0" max="10" value="5" oninput="updateConfVal(this)">
-      <span class="confidence-val" id="conf-val-${q.id}">5</span>
-    </div>
-    <h3 style="margin-top:20px;">Notes (optional):</h3>
-    <textarea id="notes-${q.id}" placeholder="Which specific proposals stood out? Anything already being pursued?"></textarea>
-  </div></div>`;
+  html += `<h3 style="margin-top:20px;">Notes (optional)</h3>
+    <textarea id="notes-${q.id}" placeholder="Which proposals stood out? Anything already being pursued in your lab?"></textarea>
+  </div>`;
   return html;
 }
 
-function buildFinalQuestion() {
-  return `<div class="question-block">
-    <div class="question-text">Final Questions</div>
-    <h3>1. Future Research Directions</h3>
-    <p style="margin-bottom:10px; color:#4a5568;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
-    <textarea id="final-directions" style="min-height:150px;" placeholder="List any research questions or directions you would pursue with this dataset, or are already pursuing..."></textarea>
-    <h3 style="margin-top:25px;">2. Overall Feedback (optional)</h3>
-    <textarea id="final-feedback" placeholder="Any comments about this evaluation, the quality of responses, or how the AI systems could be improved?"></textarea>
+function buildFinalQ() {
+  return `<div class="card">
+    <h2>Final Questions</h2>
+    <h3>Future Research Directions</h3>
+    <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
+    <textarea id="final-directions" style="min-height:150px;" placeholder="List any research questions or directions you would pursue..."></textarea>
+    <h3 style="margin-top:20px;">Overall Feedback (optional)</h3>
+    <textarea id="final-feedback" placeholder="Comments about this evaluation or how the AI systems could improve?"></textarea>
+    <div class="btn-group" style="margin-top:20px;">
+      <button class="btn btn-success btn-lg" onclick="submitResults()">Submit Evaluation</button>
+    </div>
   </div>`;
 }
 
 // ============================================================
-// UI HELPERS
+// INTERACTIONS
 // ============================================================
+
+function toggleResponse(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('expanded');
+  header.querySelector('span:last-child').textContent = body.classList.contains('expanded') ? 'Click to collapse' : 'Click to expand';
+}
+
+function selectScore(dim, qid, label, val) {
+  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
+  container.querySelectorAll('.score-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === val);
+  });
+  saveProgressSilent();
+}
+
+function selectRank(qid, rank, label) {
+  const q = POLL_DATA.questions.find(q => q.id === qid);
+  const labels = Object.keys(q.responses);
+  const numRanks = labels.length;
+
+  // Remove this label from any other rank for this question
+  for (let r = 1; r <= numRanks; r++) {
+    const opts = document.getElementById(`rank-${qid}-${r}`);
+    if (opts) {
+      opts.querySelectorAll('.rank-option').forEach(opt => {
+        if (opt.querySelector('.rank-response').textContent === label) {
+          if (r !== rank) opt.classList.remove('selected');
+        }
+      });
+    }
+  }
+
+  // Remove any other label from this rank slot
+  const rankContainer = document.getElementById(`rank-${qid}-${rank}`);
+  rankContainer.querySelectorAll('.rank-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+
+  // Select this one
+  rankContainer.querySelectorAll('.rank-option').forEach(opt => {
+    if (opt.querySelector('.rank-response').textContent === label) {
+      opt.classList.add('selected');
+    }
+  });
+
+  updateProgress();
+  saveProgressSilent();
+}
 
 function switchTab(idx) {
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
   document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx));
   currentTab = idx;
-  window.scrollTo(0, 0);
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function nextQuestion() {
   const total = POLL_DATA.questions.length + 1;
   if (currentTab < total - 1) switchTab(currentTab + 1);
 }
-
-function prevQuestion() {
-  if (currentTab > 0) switchTab(currentTab - 1);
-}
-
-function toggleResponse(header) {
-  const body = header.nextElementSibling;
-  body.classList.toggle('expanded');
-  header.querySelector('.toggle').textContent = body.classList.contains('expanded') ? 'Click to collapse' : 'Click to expand';
-}
-
-function updateConfVal(slider) {
-  const qid = slider.id.replace('confidence-', '');
-  document.getElementById(`conf-val-${qid}`).textContent = slider.value;
-}
+function prevQuestion() { if (currentTab > 0) switchTab(currentTab - 1); }
 
 function updateProgress() {
   let completed = 0;
@@ -427,15 +530,16 @@ function updateProgress() {
 
   POLL_DATA.questions.forEach((q, idx) => {
     const labels = Object.keys(q.responses);
-    let hasRanking = labels.every(label => {
-      const sel = document.getElementById(`rank-${q.id}-${label}`);
-      return sel && sel.value;
-    });
-    if (hasRanking) {
+    let allRanked = true;
+    for (let r = 1; r <= labels.length; r++) {
+      const container = document.getElementById(`rank-${q.id}-${r}`);
+      if (container && !container.querySelector('.rank-option.selected')) { allRanked = false; break; }
+    }
+    if (allRanked) {
       completed++;
-      document.querySelectorAll('.nav-tab')[idx].classList.add('completed');
+      document.querySelectorAll('.nav-tab')[idx]?.classList.add('completed');
     } else {
-      document.querySelectorAll('.nav-tab')[idx].classList.remove('completed');
+      document.querySelectorAll('.nav-tab')[idx]?.classList.remove('completed');
     }
   });
 
@@ -444,30 +548,42 @@ function updateProgress() {
   document.getElementById('progress-text').textContent = `${completed} / ${total} questions ranked`;
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function showToast(msg, duration = 3000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
-}
+function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
 // ============================================================
-// DATA COLLECTION
+// COLLECT / SAVE / SUBMIT
 // ============================================================
+
+function getSelectedScore(dim, qid, label) {
+  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
+  if (!container) return null;
+  const sel = container.querySelector('.score-btn.selected');
+  return sel ? parseInt(sel.textContent) : null;
+}
+
+function getRankings(qid) {
+  const q = POLL_DATA.questions.find(q => q.id === qid);
+  const labels = Object.keys(q.responses);
+  const rankings = {};
+  for (let r = 1; r <= labels.length; r++) {
+    const container = document.getElementById(`rank-${qid}-${r}`);
+    if (container) {
+      const sel = container.querySelector('.rank-option.selected');
+      if (sel) rankings[sel.querySelector('.rank-response').textContent] = r;
+    }
+  }
+  return rankings;
+}
 
 function collectResults() {
+  const confBtn = document.querySelector('#field-confidence-btns .score-btn.selected');
   const results = {
     reviewer: {
       name: document.getElementById('reviewer-name').value,
       expertise: document.getElementById('reviewer-expertise').value,
-      submitted_at: new Date().toISOString(),
-      user_agent: navigator.userAgent
+      field_confidence: confBtn ? parseInt(confBtn.textContent) : null,
+      submitted_at: new Date().toISOString()
     },
     poll_metadata: POLL_DATA.metadata,
     questions: {}
@@ -475,40 +591,28 @@ function collectResults() {
 
   POLL_DATA.questions.forEach(q => {
     const labels = Object.keys(q.responses);
-    const qr = { id: q.id, type: q.type, rankings: {}, confidence: null, notes: '', scores: {} };
-
-    labels.forEach(label => {
-      const sel = document.getElementById(`rank-${q.id}-${label}`);
-      qr.rankings[label] = sel ? parseInt(sel.value) || null : null;
-    });
-
-    const conf = document.getElementById(`confidence-${q.id}`);
-    qr.confidence = conf ? parseInt(conf.value) : null;
+    const qr = { id: q.id, type: q.type, rankings: getRankings(q.id), notes: '', scores: {} };
 
     const notes = document.getElementById(`notes-${q.id}`);
     qr.notes = notes ? notes.value : '';
 
     if (q.type === 'ranking') {
-      const dims = ['Accuracy', 'Novelty', 'Relevance'];
       labels.forEach(label => {
-        qr.scores[label] = {};
-        dims.forEach(dim => {
-          const input = document.getElementById(`score-${q.id}-${label}-${dim}`);
-          qr.scores[label][dim] = input ? parseInt(input.value) || null : null;
-        });
+        qr.scores[label] = {
+          accuracy: getSelectedScore('acc', q.id, label),
+          novelty: getSelectedScore('nov', q.id, label)
+        };
       });
     } else if (q.type === 'hypothesis') {
       labels.forEach(label => {
         qr.scores[label] = {
-          novelty: parseInt(document.getElementById(`hyp-novelty-${q.id}-${label}`)?.value) || null,
-          feasibility: parseInt(document.getElementById(`hyp-feasibility-${q.id}-${label}`)?.value) || null,
-          relevance: parseInt(document.getElementById(`hyp-relevance-${q.id}-${label}`)?.value) || null,
+          novelty: getSelectedScore('hyp-nov', q.id, label),
+          feasibility: getSelectedScore('hyp-feas', q.id, label),
           already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}`)?.checked || false,
           worth_pursuing: document.getElementById(`hyp-worth-${q.id}-${label}`)?.checked || false,
         };
       });
     }
-
     results.questions[q.id] = qr;
   });
 
@@ -516,156 +620,115 @@ function collectResults() {
     directions: document.getElementById('final-directions')?.value || '',
     feedback: document.getElementById('final-feedback')?.value || ''
   };
-
   return results;
 }
-
-// ============================================================
-// SAVE / LOAD / SUBMIT
-// ============================================================
 
 function saveProgressSilent() {
   try {
     const results = collectResults();
-    localStorage.setItem('ibd_expert_poll_v1', JSON.stringify(results));
-  } catch (e) { /* silent */ }
+    results._savedAt = new Date().toISOString();
+    localStorage.setItem('ibd_expert_poll_v2', JSON.stringify(results));
+  } catch(e) {}
 }
-
-function saveProgress() {
-  saveProgressSilent();
-  showToast('Progress saved locally');
-}
+function saveProgress() { saveProgressSilent(); showToast('Progress saved'); }
 
 function loadProgress() {
-  const saved = localStorage.getItem('ibd_expert_poll_v1');
+  const saved = localStorage.getItem('ibd_expert_poll_v2');
   if (!saved) return;
-
   try {
     const r = JSON.parse(saved);
     if (r.reviewer) {
-      document.getElementById('reviewer-name').value = r.reviewer.name || '';
-      document.getElementById('reviewer-expertise').value = r.reviewer.expertise || '';
+      if (r.reviewer.name) document.getElementById('reviewer-name').value = r.reviewer.name;
+      if (r.reviewer.expertise) document.getElementById('reviewer-expertise').value = r.reviewer.expertise;
+      if (r.reviewer.field_confidence != null) selectFieldConfidence(r.reviewer.field_confidence);
     }
+    // If they had already started, auto-enter review mode after a short delay
+    if (r.reviewer?.name && r.questions && Object.keys(r.questions).length > 0) {
+      setTimeout(() => {
+        if (confirm('Welcome back! You have saved progress. Continue where you left off?')) {
+          document.getElementById('landing-page').classList.add('hidden');
+          document.getElementById('review-page').classList.remove('hidden');
+          buildReviewUI();
+          restoreAnswers(r);
+        }
+      }, 300);
+    }
+  } catch(e) { console.error(e); }
+}
 
-    Object.entries(r.questions || {}).forEach(([qid, qr]) => {
-      Object.entries(qr.rankings || {}).forEach(([label, rank]) => {
-        const sel = document.getElementById(`rank-${qid}-${label}`);
-        if (sel && rank) sel.value = rank;
+function restoreAnswers(r) {
+  Object.entries(r.questions || {}).forEach(([qid, qr]) => {
+    // Restore scores
+    if (qr.scores) {
+      Object.entries(qr.scores).forEach(([label, scores]) => {
+        if (scores.accuracy) selectScoreFromLoad('acc', qid, label, scores.accuracy);
+        if (scores.novelty) selectScoreFromLoad('nov', qid, label, scores.novelty);
+        if (scores.feasibility) selectScoreFromLoad('hyp-feas', qid, label, scores.feasibility);
+        if (scores.novelty && qr.type === 'hypothesis') selectScoreFromLoad('hyp-nov', qid, label, scores.novelty);
+        if (scores.already_investigating) {
+          const cb = document.getElementById(`hyp-investigating-${qid}-${label}`);
+          if (cb) cb.checked = true;
+        }
+        if (scores.worth_pursuing) {
+          const cb = document.getElementById(`hyp-worth-${qid}-${label}`);
+          if (cb) cb.checked = true;
+        }
       });
-
-      const conf = document.getElementById(`confidence-${qid}`);
-      if (conf && qr.confidence != null) { conf.value = qr.confidence; updateConfVal(conf); }
-
-      const notes = document.getElementById(`notes-${qid}`);
-      if (notes && qr.notes) notes.value = qr.notes;
-
-      if (qr.scores) {
-        Object.entries(qr.scores).forEach(([label, scores]) => {
-          Object.entries(scores).forEach(([key, val]) => {
-            if (typeof val === 'number' && val) {
-              // Try dimension score
-              let input = document.getElementById(`score-${qid}-${label}-${key}`);
-              if (!input) input = document.getElementById(`hyp-${key}-${qid}-${label}`);
-              if (input) input.value = val;
-            } else if (typeof val === 'boolean' && val) {
-              const cbMap = { already_investigating: 'investigating', worth_pursuing: 'worth' };
-              const cbId = cbMap[key] ? `hyp-${cbMap[key]}-${qid}-${label}` : null;
-              const cb = cbId ? document.getElementById(cbId) : null;
-              if (cb) cb.checked = val;
-            }
-          });
-        });
-      }
-    });
-
-    if (r.final) {
-      const fd = document.getElementById('final-directions');
-      if (fd) fd.value = r.final.directions || '';
-      const ff = document.getElementById('final-feedback');
-      if (ff) ff.value = r.final.feedback || '';
     }
-
-    showToast('Previous progress restored');
-  } catch (e) {
-    console.error('Load error:', e);
+    // Restore rankings
+    if (qr.rankings) {
+      Object.entries(qr.rankings).forEach(([label, rank]) => {
+        if (rank) selectRank(qid, rank, label);
+      });
+    }
+    // Restore notes
+    if (qr.notes) {
+      const notes = document.getElementById(`notes-${qid}`);
+      if (notes) notes.value = qr.notes;
+    }
+  });
+  if (r.final) {
+    const fd = document.getElementById('final-directions');
+    if (fd && r.final.directions) fd.value = r.final.directions;
+    const ff = document.getElementById('final-feedback');
+    if (ff && r.final.feedback) ff.value = r.final.feedback;
   }
+  updateProgress();
+}
+
+function selectScoreFromLoad(dim, qid, label, val) {
+  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
+  if (!container) return;
+  container.querySelectorAll('.score-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i + 1 === val);
+  });
 }
 
 async function submitResults() {
   const results = collectResults();
-
-  // Validate minimum
-  if (!results.reviewer.name) {
-    alert('Please enter your name before submitting.');
-    return;
-  }
-
-  const ranked = Object.values(results.questions).filter(q =>
-    Object.values(q.rankings).some(v => v != null)
-  ).length;
-
-  if (ranked < 3) {
-    alert(`Only ${ranked} questions ranked. Please complete at least a few more before submitting.`);
-    return;
-  }
-
-  // Save locally first
+  if (!results.reviewer.name) { alert('Please enter your name.'); return; }
   saveProgressSilent();
-
-  const statusEl = document.getElementById('submit-status');
 
   if (BACKEND_URL) {
     try {
-      statusEl.className = 'submit-status';
-      statusEl.textContent = 'Submitting...';
-      statusEl.classList.remove('hidden');
-
-      const resp = await fetch(BACKEND_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(results)
-      });
-
-      if (resp.ok) {
-        statusEl.className = 'submit-status success';
-        statusEl.textContent = 'Submitted successfully! Thank you for your evaluation.';
-        showToast('Submitted!');
-      } else {
-        throw new Error(`Server returned ${resp.status}`);
-      }
-    } catch (e) {
-      statusEl.className = 'submit-status error';
-      statusEl.innerHTML = `Submission failed (${e.message}). Your results are saved locally. Please use "Export JSON" and email the file to <strong>chen.jin1@astrazeneca.net</strong>.`;
-      statusEl.classList.remove('hidden');
-    }
-  } else {
-    // No backend — show export
-    statusEl.className = 'submit-status success';
-    statusEl.innerHTML = 'Results saved locally. Please click <strong>Export JSON</strong> below and email the file to <strong>chen.jin1@astrazeneca.net</strong>. Thank you!';
-    statusEl.classList.remove('hidden');
-    exportJSON();
+      const resp = await fetch(BACKEND_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(results) });
+      if (resp.ok) { showToast('Submitted successfully!'); return; }
+    } catch(e) {}
   }
-}
-
-function exportJSON() {
-  const results = collectResults();
+  // Fallback: download JSON
   const json = JSON.stringify(results, null, 2);
   document.getElementById('export-container').classList.remove('hidden');
   document.getElementById('export-area').textContent = json;
-
-  // Also trigger download
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([json], {type:'application/json'});
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g, '_') || 'anonymous'}_${new Date().toISOString().slice(0,10)}.json`;
+  a.href = URL.createObjectURL(blob);
+  a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;
   a.click();
-  URL.revokeObjectURL(url);
+  showToast('JSON downloaded — please email to chen.jin1@astrazeneca.net');
 }
 
 function copyExport() {
-  const text = document.getElementById('export-area').textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+  navigator.clipboard.writeText(document.getElementById('export-area').textContent).then(() => showToast('Copied'));
 }
 
 document.addEventListener('DOMContentLoaded', init);
