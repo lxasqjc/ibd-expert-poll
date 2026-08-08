@@ -627,7 +627,11 @@ function saveProgressSilent() {
   try {
     const results = collectResults();
     results._savedAt = new Date().toISOString();
+    results._isPartial = true;
     localStorage.setItem('ibd_expert_poll_v2', JSON.stringify(results));
+    if (BACKEND_URL && results.reviewer && results.reviewer.name) {
+      fetch(BACKEND_URL, { method:'POST', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} }).catch(()=>{});
+    }
   } catch(e) {}
 }
 function saveProgress() { saveProgressSilent(); showToast('Progress saved'); }
@@ -711,9 +715,10 @@ async function submitResults() {
 
   if (BACKEND_URL) {
     try {
-      const resp = await fetch(BACKEND_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(results) });
-      if (resp.ok) { showToast('Submitted successfully!'); return; }
-    } catch(e) {}
+      const resp = await fetch(BACKEND_URL, { method:'POST', body:JSON.stringify(results), redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'} });
+      const data = await resp.json();
+      if (data.status === 'ok') { showToast('Submitted successfully!'); return; }
+    } catch(e) { console.warn('Backend submit failed:', e); }
   }
   // Fallback: download JSON
   const json = JSON.stringify(results, null, 2);
