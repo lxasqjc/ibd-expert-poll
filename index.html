@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expert Blind Evaluation — Crohn's Fistula IBD Study</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #f5f7fa;
+  padding: 20px;
+}
+.container { max-width: 920px; margin: 0 auto; }
+h1 { color: #1a365d; margin-bottom: 10px; font-size: 1.6em; }
+h2 { color: #2d3748; margin: 30px 0 15px; font-size: 1.3em; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+h3 { color: #4a5568; margin: 20px 0 10px; font-size: 1.1em; }
+.intro { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #3182ce; }
+.intro p { margin-bottom: 10px; }
+.question-block {
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.question-text { font-weight: 600; color: #2d3748; margin-bottom: 15px; font-size: 1.05em; }
+.response-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.response-header {
+  background: #edf2f7;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.response-header:hover { background: #e2e8f0; }
+.response-header .toggle { color: #718096; font-size: 0.9em; }
+.response-body {
+  padding: 15px;
+  display: none;
+  white-space: pre-wrap;
+  font-size: 0.92em;
+  max-height: 600px;
+  overflow-y: auto;
+  background: #fafbfc;
+  border-top: 1px solid #e2e8f0;
+}
+.response-body.expanded { display: block; }
+.scoring-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid #e2e8f0; }
+.score-row { display: flex; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.score-label { width: 160px; font-size: 0.9em; color: #4a5568; }
+.score-input { width: 60px; padding: 5px 8px; border: 1px solid #cbd5e0; border-radius: 4px; text-align: center; font-size: 0.95em; }
+.ranking-section { margin-top: 15px; }
+.rank-row { display: flex; align-items: center; margin-bottom: 8px; gap: 10px; }
+.rank-row label { font-size: 0.9em; width: 100px; }
+.rank-row select { padding: 5px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.95em; }
+.confidence-row { margin-top: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.confidence-row label { font-size: 0.9em; color: #4a5568; }
+.confidence-slider { width: 200px; }
+.confidence-val { font-weight: 600; width: 30px; text-align: center; }
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.92em;
+  resize: vertical;
+  min-height: 80px;
+}
+.q12-scores { margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+.q12-scores p { font-weight: 600; margin-bottom: 10px; }
+.checkbox-row { margin-top: 8px; }
+.checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.btn-group { margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary { background: #3182ce; color: #fff; }
+.btn-primary:hover { background: #2c5282; }
+.btn-secondary { background: #edf2f7; color: #4a5568; }
+.btn-secondary:hover { background: #e2e8f0; }
+.btn-success { background: #38a169; color: #fff; }
+.btn-success:hover { background: #2f855a; }
+.btn-danger { background: #e53e3e; color: #fff; }
+.btn-danger:hover { background: #c53030; }
+.progress-bar { background: #e2e8f0; border-radius: 10px; height: 8px; margin: 15px 0; overflow: hidden; }
+.progress-fill { background: #3182ce; height: 100%; transition: width 0.3s; }
+.nav-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 2px; }
+.nav-tab {
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  font-size: 0.88em;
+  color: #718096;
+  transition: all 0.2s;
+}
+.nav-tab:hover { background: #edf2f7; }
+.nav-tab.active { background: #3182ce; color: #fff; }
+.nav-tab.completed { background: #c6f6d5; color: #276749; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.reviewer-info { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+.reviewer-info input { padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 4px; width: 280px; font-size: 0.95em; }
+.hidden { display: none; }
+.export-area { margin-top: 20px; background: #1a202c; color: #a0aec0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.82em; max-height: 400px; overflow-y: auto; white-space: pre-wrap; }
+.toast {
+  position: fixed; bottom: 30px; right: 30px; background: #38a169; color: #fff;
+  padding: 12px 20px; border-radius: 8px; font-weight: 600; z-index: 1000;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+.submit-status { margin-top: 15px; padding: 12px; border-radius: 6px; }
+.submit-status.success { background: #c6f6d5; color: #276749; }
+.submit-status.error { background: #fed7d7; color: #c53030; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Expert Blind Evaluation</h1>
+  <p style="color:#718096; margin-bottom:20px;">Crohn's Fistula — Spatial Transcriptomics Agent Responses</p>
+
+  <div class="intro">
+    <p><strong>Context:</strong> You are evaluating responses to biological interpretation questions about Crohn's disease fistula tissue, generated by AI systems with different levels of data access. Responses are blinded — you do not know which system produced which response.</p>
+    <p><strong>Data studied:</strong> Xenium 5100-plex (~1.86M cells), Xenium 480-plex (~6.3M cells), Visium spatial transcriptomics, and scRNA-seq reference from IBD patients (healthy, diseased non-fistulising, fistulising, diverticular).</p>
+    <p><strong>Your task:</strong> For each question, read all responses, then rank them and score your confidence. You can save progress at any time and return later. When finished, click Submit.</p>
+    <p><strong>Time estimate:</strong> ~60-90 minutes total. You can complete it across multiple sessions.</p>
+  </div>
+
+  <div class="reviewer-info">
+    <input type="text" id="reviewer-name" placeholder="Your name">
+    <input type="text" id="reviewer-expertise" placeholder="Area of expertise (e.g. spatial biology, IBD)">
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+  <p id="progress-text" style="font-size:0.85em; color:#718096; margin-bottom:15px;">0 / 0 questions completed</p>
+
+  <div class="nav-tabs" id="nav-tabs"></div>
+  <div id="questions-container"></div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="prevQuestion()">Previous</button>
+    <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
+    <button class="btn btn-secondary" onclick="saveProgress()">Save Progress</button>
+    <button class="btn btn-success" onclick="submitResults()">Submit Results</button>
+    <button class="btn btn-secondary" onclick="exportJSON()">Export JSON</button>
+  </div>
+
+  <div id="submit-status" class="hidden"></div>
+
+  <div id="export-container" class="hidden">
+    <h3 style="margin-top:20px;">Exported Results</h3>
+    <div class="export-area" id="export-area"></div>
+    <button class="btn btn-secondary" style="margin-top:10px;" onclick="copyExport()">Copy to Clipboard</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+// Backend endpoint for collecting results.
+// Option 1: Google Apps Script web app URL (deploy as web app, anyone can access)
+// Option 2: Formspree endpoint (formspree.io — free tier: 50 submissions/month)
+// Set to null to disable auto-submission (reviewer will export JSON manually)
+const BACKEND_URL = null; // Replace with your endpoint when ready
+
+// Auto-save interval (ms) — saves to localStorage every 60s
+const AUTOSAVE_INTERVAL = 60000;
+
+// ============================================================
+// POLL DATA — populated by assemble_expert_poll.py
+// Replace this entire object with actual blinded responses
+// ============================================================
+const POLL_DATA = {
+  metadata: {
+    study: "Crohn's Fistula IBD - Spatial Transcriptomics",
+    date_created: "2026-08-08",
+    n_questions: 11,
+    arms: ["X", "Y", "Z"],
+    note: "Labels X/Y/Z are randomized per question. Do NOT attempt to identify which system produced which response."
+  },
+  questions: [
+    {id: "Q1", type: "ranking", text: "What are the fibroblast subtypes and what are their biological significance? What are their marker genes & key pathways?", responses: {"X": "[Placeholder — will be populated with actual blinded responses]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q2", type: "ranking", text: "Based on the data, how do different types of fibroblasts interact and drive fistula formation in Crohn's disease?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q3", type: "ranking", text: "What do the TWIST1 overexpressed fibroblasts in the gut do?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q4", type: "ranking", text: "What changes do you observe in epithelium in fistula formation? Any difference in epithelium on healthy VS diseased but not fistulising VS fistulising samples?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q5", type: "ranking", text: "On the colon samples, compare the difference between Crohn's fistula and diverticular fistula.", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q6", type: "ranking", text: "How does the location of fistula affect the inflammatory signature? For instance, does the signature becomes more myeloid, more lymphoid, more cytotoxic, or more innate, as fistula location changes?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q7", type: "ranking", text: "How does the epithelialisation of fistula affect other cells? For instance, do other cells become more fibrotic or inflammatory?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q8", type: "ranking", text: "What is the adaptive immune response you get in fistula? Can you differentiate strongly inflammatory fistula and stabilised ones?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q9", type: "ranking", text: "Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signatures?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q11", type: "ranking", text: "What is the difference in macrophage state of healthy vs fistula samples?", responses: {"X": "[Placeholder]", "Y": "[Placeholder]", "Z": "[Placeholder]"}},
+    {id: "Q12", type: "hypothesis", text: "Each system was asked to propose novel research directions for Crohn's disease based on the available data. Below are their proposals. Select which you think are worth investigating, and which you are already investigating.", responses: {"X": "[Placeholder — hypothesis proposals from system X]", "Y": "[Placeholder — hypothesis proposals from system Y]", "Z": "[Placeholder — hypothesis proposals from system Z]"}}
+  ],
+  final_question: {
+    id: "FINAL",
+    type: "open",
+    text: "Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?"
+  }
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentTab = 0;
+let autoSaveTimer = null;
+
+function init() {
+  const container = document.getElementById('questions-container');
+  const tabs = document.getElementById('nav-tabs');
+
+  POLL_DATA.questions.forEach((q, idx) => {
+    const tab = document.createElement('div');
+    tab.className = 'nav-tab';
+    tab.textContent = q.id;
+    tab.onclick = () => switchTab(idx);
+    tabs.appendChild(tab);
+
+    const content = document.createElement('div');
+    content.className = 'tab-content';
+    content.id = `tab-${idx}`;
+    content.innerHTML = q.type === 'ranking' ? buildRankingQuestion(q) : buildHypothesisQuestion(q);
+    container.appendChild(content);
+  });
+
+  // Final question tab
+  const finalTab = document.createElement('div');
+  finalTab.className = 'nav-tab';
+  finalTab.textContent = 'Final';
+  finalTab.onclick = () => switchTab(POLL_DATA.questions.length);
+  tabs.appendChild(finalTab);
+
+  const finalContent = document.createElement('div');
+  finalContent.className = 'tab-content';
+  finalContent.id = `tab-${POLL_DATA.questions.length}`;
+  finalContent.innerHTML = buildFinalQuestion();
+  container.appendChild(finalContent);
+
+  switchTab(0);
+  loadProgress();
+  updateProgress();
+
+  // Auto-save
+  autoSaveTimer = setInterval(() => {
+    saveProgressSilent();
+  }, AUTOSAVE_INTERVAL);
+}
+
+function buildRankingQuestion(q) {
+  const labels = Object.keys(q.responses);
+  let html = `<div class="question-block">
+    <div class="question-text">${q.id}: ${q.text}</div>
+    <h3>Responses (click to expand):</h3>`;
+
+  labels.forEach(label => {
+    html += `<div class="response-panel">
+      <div class="response-header" onclick="toggleResponse(this)">
+        <span>Response ${label}</span><span class="toggle">Click to expand</span>
+      </div>
+      <div class="response-body">${escapeHtml(q.responses[label])}</div>
+    </div>`;
+  });
+
+  html += `<div class="scoring-section">
+    <h3>Ranking (1 = best, ${labels.length} = worst):</h3>
+    <div class="ranking-section">`;
+
+  labels.forEach(label => {
+    html += `<div class="rank-row">
+      <label>Response ${label}:</label>
+      <select id="rank-${q.id}-${label}" onchange="updateProgress()">
+        <option value="">--</option>
+        ${labels.map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+      </select>
+    </div>`;
+  });
+
+  html += `</div>
+    <h3 style="margin-top:20px;">Dimension scores (1-10, optional but helpful):</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Rate each response independently:</p>`;
+
+  const dims = ['Accuracy', 'Novelty', 'Relevance'];
+  labels.forEach(label => {
+    html += `<div style="margin-bottom:12px;"><strong>Response ${label}:</strong><div class="score-row" style="margin-top:5px;">`;
+    dims.forEach(dim => {
+      html += `<span class="score-label">${dim}:</span>
+        <input type="number" class="score-input" id="score-${q.id}-${label}-${dim}" min="1" max="10" placeholder="-">`;
+    });
+    html += `</div></div>`;
+  });
+
+  html += `<div class="confidence-row">
+      <label>Your confidence in this ranking (0 = guessing, 10 = certain):</label>
+      <input type="range" class="confidence-slider" id="confidence-${q.id}" min="0" max="10" value="5" oninput="updateConfVal(this)">
+      <span class="confidence-val" id="conf-val-${q.id}">5</span>
+    </div>
+    <h3 style="margin-top:20px;">Notes (optional):</h3>
+    <textarea id="notes-${q.id}" placeholder="What stood out? Why this ranking?"></textarea>
+  </div></div>`;
+  return html;
+}
+
+function buildHypothesisQuestion(q) {
+  const labels = Object.keys(q.responses);
+  let html = `<div class="question-block">
+    <div class="question-text">${q.id}: Hypothesis Generation</div>
+    <p style="font-size:0.92em; color:#4a5568; margin-bottom:15px;">${q.text}</p>`;
+
+  labels.forEach(label => {
+    html += `<div class="response-panel">
+      <div class="response-header" onclick="toggleResponse(this)">
+        <span>System ${label} — Proposed Directions</span><span class="toggle">Click to expand</span>
+      </div>
+      <div class="response-body">${escapeHtml(q.responses[label])}
+        <div class="q12-scores">
+          <p>Rate System ${label}'s proposals:</p>
+          <div class="score-row">
+            <span class="score-label">Novelty (1-10):</span>
+            <input type="number" class="score-input" id="hyp-novelty-${q.id}-${label}" min="1" max="10" placeholder="-">
+            <span class="score-label">Feasibility (1-10):</span>
+            <input type="number" class="score-input" id="hyp-feasibility-${q.id}-${label}" min="1" max="10" placeholder="-">
+            <span class="score-label">Relevance (1-10):</span>
+            <input type="number" class="score-input" id="hyp-relevance-${q.id}-${label}" min="1" max="10" placeholder="-">
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> Contains directions we are <strong>already investigating</strong></label>
+          </div>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> Contains directions <strong>worth pursuing</strong> (new to us)</label>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += `<div class="scoring-section">
+    <h3>Overall ranking of hypothesis quality (1 = best proposals, ${labels.length} = worst):</h3>
+    <div class="ranking-section">`;
+
+  labels.forEach(label => {
+    html += `<div class="rank-row">
+      <label>System ${label}:</label>
+      <select id="rank-${q.id}-${label}" onchange="updateProgress()">
+        <option value="">--</option>
+        ${labels.map((_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+      </select>
+    </div>`;
+  });
+
+  html += `</div>
+    <div class="confidence-row">
+      <label>Your confidence (0-10):</label>
+      <input type="range" class="confidence-slider" id="confidence-${q.id}" min="0" max="10" value="5" oninput="updateConfVal(this)">
+      <span class="confidence-val" id="conf-val-${q.id}">5</span>
+    </div>
+    <h3 style="margin-top:20px;">Notes (optional):</h3>
+    <textarea id="notes-${q.id}" placeholder="Which specific proposals stood out? Anything already being pursued?"></textarea>
+  </div></div>`;
+  return html;
+}
+
+function buildFinalQuestion() {
+  return `<div class="question-block">
+    <div class="question-text">Final Questions</div>
+    <h3>1. Future Research Directions</h3>
+    <p style="margin-bottom:10px; color:#4a5568;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
+    <textarea id="final-directions" style="min-height:150px;" placeholder="List any research questions or directions you would pursue with this dataset, or are already pursuing..."></textarea>
+    <h3 style="margin-top:25px;">2. Overall Feedback (optional)</h3>
+    <textarea id="final-feedback" placeholder="Any comments about this evaluation, the quality of responses, or how the AI systems could be improved?"></textarea>
+  </div>`;
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+
+function switchTab(idx) {
+  document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-content').forEach((c, i) => c.classList.toggle('active', i === idx));
+  currentTab = idx;
+  window.scrollTo(0, 0);
+}
+
+function nextQuestion() {
+  const total = POLL_DATA.questions.length + 1;
+  if (currentTab < total - 1) switchTab(currentTab + 1);
+}
+
+function prevQuestion() {
+  if (currentTab > 0) switchTab(currentTab - 1);
+}
+
+function toggleResponse(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('expanded');
+  header.querySelector('.toggle').textContent = body.classList.contains('expanded') ? 'Click to collapse' : 'Click to expand';
+}
+
+function updateConfVal(slider) {
+  const qid = slider.id.replace('confidence-', '');
+  document.getElementById(`conf-val-${qid}`).textContent = slider.value;
+}
+
+function updateProgress() {
+  let completed = 0;
+  const total = POLL_DATA.questions.length;
+
+  POLL_DATA.questions.forEach((q, idx) => {
+    const labels = Object.keys(q.responses);
+    let hasRanking = labels.every(label => {
+      const sel = document.getElementById(`rank-${q.id}-${label}`);
+      return sel && sel.value;
+    });
+    if (hasRanking) {
+      completed++;
+      document.querySelectorAll('.nav-tab')[idx].classList.add('completed');
+    } else {
+      document.querySelectorAll('.nav-tab')[idx].classList.remove('completed');
+    }
+  });
+
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${completed} / ${total} questions ranked`;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ============================================================
+// DATA COLLECTION
+// ============================================================
+
+function collectResults() {
+  const results = {
+    reviewer: {
+      name: document.getElementById('reviewer-name').value,
+      expertise: document.getElementById('reviewer-expertise').value,
+      submitted_at: new Date().toISOString(),
+      user_agent: navigator.userAgent
+    },
+    poll_metadata: POLL_DATA.metadata,
+    questions: {}
+  };
+
+  POLL_DATA.questions.forEach(q => {
+    const labels = Object.keys(q.responses);
+    const qr = { id: q.id, type: q.type, rankings: {}, confidence: null, notes: '', scores: {} };
+
+    labels.forEach(label => {
+      const sel = document.getElementById(`rank-${q.id}-${label}`);
+      qr.rankings[label] = sel ? parseInt(sel.value) || null : null;
+    });
+
+    const conf = document.getElementById(`confidence-${q.id}`);
+    qr.confidence = conf ? parseInt(conf.value) : null;
+
+    const notes = document.getElementById(`notes-${q.id}`);
+    qr.notes = notes ? notes.value : '';
+
+    if (q.type === 'ranking') {
+      const dims = ['Accuracy', 'Novelty', 'Relevance'];
+      labels.forEach(label => {
+        qr.scores[label] = {};
+        dims.forEach(dim => {
+          const input = document.getElementById(`score-${q.id}-${label}-${dim}`);
+          qr.scores[label][dim] = input ? parseInt(input.value) || null : null;
+        });
+      });
+    } else if (q.type === 'hypothesis') {
+      labels.forEach(label => {
+        qr.scores[label] = {
+          novelty: parseInt(document.getElementById(`hyp-novelty-${q.id}-${label}`)?.value) || null,
+          feasibility: parseInt(document.getElementById(`hyp-feasibility-${q.id}-${label}`)?.value) || null,
+          relevance: parseInt(document.getElementById(`hyp-relevance-${q.id}-${label}`)?.value) || null,
+          already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}`)?.checked || false,
+          worth_pursuing: document.getElementById(`hyp-worth-${q.id}-${label}`)?.checked || false,
+        };
+      });
+    }
+
+    results.questions[q.id] = qr;
+  });
+
+  results.final = {
+    directions: document.getElementById('final-directions')?.value || '',
+    feedback: document.getElementById('final-feedback')?.value || ''
+  };
+
+  return results;
+}
+
+// ============================================================
+// SAVE / LOAD / SUBMIT
+// ============================================================
+
+function saveProgressSilent() {
+  try {
+    const results = collectResults();
+    localStorage.setItem('ibd_expert_poll_v1', JSON.stringify(results));
+  } catch (e) { /* silent */ }
+}
+
+function saveProgress() {
+  saveProgressSilent();
+  showToast('Progress saved locally');
+}
+
+function loadProgress() {
+  const saved = localStorage.getItem('ibd_expert_poll_v1');
+  if (!saved) return;
+
+  try {
+    const r = JSON.parse(saved);
+    if (r.reviewer) {
+      document.getElementById('reviewer-name').value = r.reviewer.name || '';
+      document.getElementById('reviewer-expertise').value = r.reviewer.expertise || '';
+    }
+
+    Object.entries(r.questions || {}).forEach(([qid, qr]) => {
+      Object.entries(qr.rankings || {}).forEach(([label, rank]) => {
+        const sel = document.getElementById(`rank-${qid}-${label}`);
+        if (sel && rank) sel.value = rank;
+      });
+
+      const conf = document.getElementById(`confidence-${qid}`);
+      if (conf && qr.confidence != null) { conf.value = qr.confidence; updateConfVal(conf); }
+
+      const notes = document.getElementById(`notes-${qid}`);
+      if (notes && qr.notes) notes.value = qr.notes;
+
+      if (qr.scores) {
+        Object.entries(qr.scores).forEach(([label, scores]) => {
+          Object.entries(scores).forEach(([key, val]) => {
+            if (typeof val === 'number' && val) {
+              // Try dimension score
+              let input = document.getElementById(`score-${qid}-${label}-${key}`);
+              if (!input) input = document.getElementById(`hyp-${key}-${qid}-${label}`);
+              if (input) input.value = val;
+            } else if (typeof val === 'boolean' && val) {
+              const cbMap = { already_investigating: 'investigating', worth_pursuing: 'worth' };
+              const cbId = cbMap[key] ? `hyp-${cbMap[key]}-${qid}-${label}` : null;
+              const cb = cbId ? document.getElementById(cbId) : null;
+              if (cb) cb.checked = val;
+            }
+          });
+        });
+      }
+    });
+
+    if (r.final) {
+      const fd = document.getElementById('final-directions');
+      if (fd) fd.value = r.final.directions || '';
+      const ff = document.getElementById('final-feedback');
+      if (ff) ff.value = r.final.feedback || '';
+    }
+
+    showToast('Previous progress restored');
+  } catch (e) {
+    console.error('Load error:', e);
+  }
+}
+
+async function submitResults() {
+  const results = collectResults();
+
+  // Validate minimum
+  if (!results.reviewer.name) {
+    alert('Please enter your name before submitting.');
+    return;
+  }
+
+  const ranked = Object.values(results.questions).filter(q =>
+    Object.values(q.rankings).some(v => v != null)
+  ).length;
+
+  if (ranked < 3) {
+    alert(`Only ${ranked} questions ranked. Please complete at least a few more before submitting.`);
+    return;
+  }
+
+  // Save locally first
+  saveProgressSilent();
+
+  const statusEl = document.getElementById('submit-status');
+
+  if (BACKEND_URL) {
+    try {
+      statusEl.className = 'submit-status';
+      statusEl.textContent = 'Submitting...';
+      statusEl.classList.remove('hidden');
+
+      const resp = await fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(results)
+      });
+
+      if (resp.ok) {
+        statusEl.className = 'submit-status success';
+        statusEl.textContent = 'Submitted successfully! Thank you for your evaluation.';
+        showToast('Submitted!');
+      } else {
+        throw new Error(`Server returned ${resp.status}`);
+      }
+    } catch (e) {
+      statusEl.className = 'submit-status error';
+      statusEl.innerHTML = `Submission failed (${e.message}). Your results are saved locally. Please use "Export JSON" and email the file to <strong>chen.jin1@astrazeneca.net</strong>.`;
+      statusEl.classList.remove('hidden');
+    }
+  } else {
+    // No backend — show export
+    statusEl.className = 'submit-status success';
+    statusEl.innerHTML = 'Results saved locally. Please click <strong>Export JSON</strong> below and email the file to <strong>chen.jin1@astrazeneca.net</strong>. Thank you!';
+    statusEl.classList.remove('hidden');
+    exportJSON();
+  }
+}
+
+function exportJSON() {
+  const results = collectResults();
+  const json = JSON.stringify(results, null, 2);
+  document.getElementById('export-container').classList.remove('hidden');
+  document.getElementById('export-area').textContent = json;
+
+  // Also trigger download
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g, '_') || 'anonymous'}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyExport() {
+  const text = document.getElementById('export-area').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
