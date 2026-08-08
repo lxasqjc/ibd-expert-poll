@@ -8,80 +8,65 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.6; color: #333; background: #f5f7fa; padding: 20px;
+  line-height: 1.6; color: #333; background: #f5f7fa; padding: 12px;
 }
 .container { max-width: 900px; margin: 0 auto; }
 h1 { color: #1a365d; margin-bottom: 8px; font-size: 1.5em; }
-h2 { color: #2d3748; margin: 25px 0 12px; font-size: 1.25em; }
+h2 { color: #2d3748; margin: 25px 0 12px; font-size: 1.2em; }
 h3 { color: #4a5568; margin: 18px 0 8px; font-size: 1.05em; }
 
 /* Cards */
 .card {
-  background: #fff; padding: 24px; border-radius: 10px; margin-bottom: 20px;
+  background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
 .card-accent { border-left: 4px solid #3182ce; }
 .card-highlight { border: 2px solid #3182ce; background: #ebf8ff; }
 
 /* Landing */
-.landing { text-align: center; padding: 40px 20px; }
-.landing h1 { font-size: 2em; margin-bottom: 16px; }
-.landing p { color: #4a5568; max-width: 600px; margin: 0 auto 12px; font-size: 1.05em; }
-.landing .steps { text-align: left; max-width: 500px; margin: 30px auto; }
-.landing .step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.landing { text-align: center; padding: 20px 10px; }
+.landing h1 { font-size: 1.8em; margin-bottom: 16px; }
+.landing p { color: #4a5568; max-width: 600px; margin: 0 auto 12px; font-size: 1.02em; }
+.landing .steps { text-align: left; max-width: 500px; margin: 25px auto; }
+.landing .step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
 .step-num { background: #3182ce; color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
 .step-text { padding-top: 3px; }
 
 /* Responses */
 .response-panel { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
 .response-header {
-  background: #edf2f7; padding: 12px 16px; cursor: pointer; font-weight: 600;
-  display: flex; justify-content: space-between; align-items: center; user-select: none;
+  background: #edf2f7; padding: 12px 16px; font-weight: 600;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.response-header:hover { background: #e2e8f0; }
 .response-body {
-  padding: 16px; display: none; white-space: pre-wrap; font-size: 0.91em;
+  padding: 16px; white-space: pre-wrap; font-size: 0.91em;
   max-height: 500px; overflow-y: auto; background: #fafbfc; border-top: 1px solid #e2e8f0;
 }
-.response-body.expanded { display: block; }
 
-/* Score buttons */
-.score-group { margin-bottom: 16px; }
-.score-group-label { font-size: 0.88em; color: #4a5568; margin-bottom: 6px; font-weight: 600; }
-.score-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
-.score-btn {
-  width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 8px;
-  background: #fff; cursor: pointer; font-weight: 600; font-size: 0.9em;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s; color: #4a5568;
+/* Drag and drop ranking */
+.drag-ranking { margin-top: 10px; }
+.drag-ranking-label { font-size: 0.88em; color: #4a5568; margin-bottom: 8px; font-weight: 600; }
+.drag-list { list-style: none; padding: 0; margin: 0; }
+.drag-item {
+  background: #fff; border: 2px solid #e2e8f0; border-radius: 10px;
+  padding: 14px 18px; margin-bottom: 8px; cursor: grab;
+  display: flex; align-items: center; gap: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  user-select: none; touch-action: none;
 }
-.score-btn:hover { border-color: #3182ce; background: #ebf8ff; }
-.score-btn.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
-.score-btn.low { border-color: #feb2b2; }
-.score-btn.low.selected { background: #e53e3e; border-color: #e53e3e; }
-.score-btn.mid { border-color: #fbd38d; }
-.score-btn.mid.selected { background: #d69e2e; border-color: #d69e2e; }
-.score-btn.high { border-color: #9ae6b4; }
-.score-btn.high.selected { background: #38a169; border-color: #38a169; }
-
-/* Ranking */
-.rank-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-.rank-option {
-  border: 2px solid #e2e8f0; border-radius: 10px; padding: 14px 20px;
-  cursor: pointer; text-align: center; min-width: 100px;
-  transition: all 0.15s; background: #fff;
-}
-.rank-option:hover { border-color: #3182ce; background: #ebf8ff; }
-.rank-option.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
-.rank-option .rank-label { font-size: 0.82em; color: #718096; margin-bottom: 2px; }
-.rank-option.selected .rank-label { color: #bee3f8; }
-.rank-option .rank-response { font-weight: 700; font-size: 1.1em; }
+.drag-item:active { cursor: grabbing; }
+.drag-item:hover { border-color: #3182ce; box-shadow: 0 2px 8px rgba(49,130,206,0.15); }
+.drag-item.dragging { opacity: 0.5; border-color: #3182ce; transform: scale(0.97); }
+.drag-item.drag-over { border-color: #38a169; box-shadow: 0 0 0 3px rgba(56,161,105,0.2); }
+.drag-handle { color: #a0aec0; font-size: 1.3em; flex-shrink: 0; }
+.drag-rank-num { background: #3182ce; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
+.drag-item-label { font-weight: 600; font-size: 1em; }
 
 /* Navigation */
 .nav-tabs { display: flex; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; flex-wrap: wrap; gap: 2px; }
 .nav-tab {
-  padding: 9px 13px; cursor: pointer; border-radius: 6px 6px 0 0;
-  font-size: 0.85em; color: #718096; transition: all 0.2s;
+  padding: 9px 11px; cursor: pointer; border-radius: 6px 6px 0 0;
+  font-size: 0.82em; color: #718096; transition: all 0.2s;
 }
 .nav-tab:hover { background: #edf2f7; }
 .nav-tab.active { background: #3182ce; color: #fff; }
@@ -121,6 +106,10 @@ textarea {
   width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 8px;
   font-family: inherit; font-size: 0.92em; resize: vertical; min-height: 80px;
 }
+input[type="text"], input[type="email"] {
+  padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px;
+  width: 100%; max-width: 360px; font-size: 0.95em;
+}
 .hidden { display: none; }
 .toast {
   position: fixed; bottom: 30px; right: 30px; background: #2d3748; color: #fff;
@@ -129,9 +118,46 @@ textarea {
 }
 .toast.show { opacity: 1; }
 .export-area { margin-top: 15px; background: #1a202c; color: #a0aec0; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.8em; max-height: 300px; overflow-y: auto; white-space: pre-wrap; }
-.checkbox-row { margin-top: 10px; }
-.checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
-.q12-scores { margin-top: 16px; border-top: 1px solid #e2e8f0; padding-top: 16px; }
+
+/* Q12 hypothesis checkboxes */
+.hyp-checkboxes { margin-top: 12px; padding: 12px; background: #f7fafc; border-radius: 8px; }
+.hyp-checkbox-row { margin-bottom: 8px; }
+.hyp-checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+/* Confidence buttons */
+.conf-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
+.conf-btn {
+  width: 36px; height: 36px; border: 2px solid #e2e8f0; border-radius: 8px;
+  background: #fff; cursor: pointer; font-weight: 600; font-size: 0.9em;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; color: #4a5568;
+}
+.conf-btn:hover { border-color: #3182ce; background: #ebf8ff; }
+.conf-btn.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+  body { padding: 6px; }
+  .container { padding: 0 2px; }
+  .card { padding: 14px; }
+  .landing h1 { font-size: 1.4em; }
+  .landing p { font-size: 0.93em; }
+  h2 { font-size: 1.05em; }
+  .nav-tabs { gap: 1px; }
+  .nav-tab { padding: 7px 8px; font-size: 0.75em; }
+  .btn { padding: 10px 16px; font-size: 0.9em; }
+  .btn-lg { padding: 12px 24px; font-size: 0.95em; }
+  .response-body { max-height: 400px; font-size: 0.85em; padding: 12px; }
+  .drag-item { padding: 12px 14px; }
+  textarea { min-height: 70px; font-size: 0.88em; }
+  input[type="text"], input[type="email"] { max-width: 100%; }
+}
+@media (max-width: 400px) {
+  .nav-tab { padding: 6px 5px; font-size: 0.7em; }
+  .landing h1 { font-size: 1.2em; }
+  .card { padding: 10px; }
+  .drag-item { padding: 10px 12px; gap: 8px; }
+}
 </style>
 </head>
 <body>
@@ -141,40 +167,41 @@ textarea {
     <div class="landing">
       <h1>Expert Blind Evaluation</h1>
       <p>Crohn's Fistula — Spatial Transcriptomics</p>
-      <p style="color:#718096; font-size:0.92em;">Thank you for participating. Your expert assessment helps validate AI-assisted biological interpretation.</p>
+      <p style="color:#4a5568; font-size:0.95em; margin-top:8px;">Three AI systems answered biological questions about Crohn's disease fistula using data in our Nature fistula paper.</p>
+      <p style="color:#718096; font-size:0.88em; margin-top:6px;">Responses are <strong>blinded</strong> — you won't know which system produced which answer. Labels (X, Y, Z) are randomized per question.</p>
 
-      <div class="card card-accent" style="text-align:left; margin-top:30px;">
-        <h3 style="margin-top:0;">What you'll be evaluating</h3>
-        <p style="font-size:0.92em; margin-bottom:10px;">Three AI systems answered biological questions about Crohn's disease fistula using spatial transcriptomics data (Xenium 5100-plex, 1.86M cells; Xenium 480-plex, 6.3M cells; Visium; scRNA-seq).</p>
-        <p style="font-size:0.92em;">Responses are <strong>blinded</strong> — you won't know which system produced which answer. Labels (X, Y, Z) are randomized per question.</p>
+      <div class="card card-accent" style="text-align:left; margin-top:25px;">
+        <p style="font-size:0.92em; color:#2c5282; margin-bottom:10px;"><strong>To thank you and recognise you for your contribution to paper, we will include your name in the author list, when the paper gets published. The order of authors will be dependent on the quality & thoroughness of your review.</strong></p>
+        <p style="font-size:0.88em; color:#4a5568;">Estimated time: 1-2 hours. You can save progress and continue later.</p>
       </div>
 
       <div class="steps">
-        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Read</strong> each response (expand panels to view)</div></div>
-        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Score</strong> each response on Accuracy and Novelty (1-10)</div></div>
-        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Rank</strong> the responses (best to worst)</div></div>
-        <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Repeat</strong> for 11 questions (~60-90 min total, can pause anytime)</div></div>
+        <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Read</strong> all responses for each question</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Rank</strong> the responses by dragging them (considering novelty and factfulness)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Repeat</strong> for 11 questions, then submit</div></div>
       </div>
 
       <div class="card" style="text-align:left; margin-top:20px;">
-        <h3 style="margin-top:0;">Scoring criteria</h3>
-        <p style="font-size:0.92em; margin-bottom:8px;"><strong>Accuracy (factfulness)</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
-        <p style="font-size:0.92em;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to those that would be discovered in a research paper on this topic? (vs generic textbook knowledge)</p>
+        <h3 style="margin-top:0;">Ranking criteria</h3>
+        <p style="font-size:0.92em; margin-bottom:8px;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to our Nature fistula paper? (vs generic textbook knowledge)</p>
+        <p style="font-size:0.92em;"><strong>Factfulness</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
+        <p style="font-size:0.85em; color:#718096; margin-top:8px; font-style:italic;">Note: We ask you to rank rather than score because it is difficult to score factfulness for novel findings — relative comparison is more reliable.</p>
       </div>
 
       <div class="card" style="text-align:left; margin-top:15px;">
         <h3 style="margin-top:0;">Before we begin</h3>
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:14px;">
           <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:4px;">Your name:</label>
-          <input type="text" id="reviewer-name" placeholder="e.g. Dr. Smith" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; width:100%; max-width:300px; font-size:0.95em;">
+          <input type="text" id="reviewer-name" placeholder="e.g. Dr. Jane Smith">
         </div>
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:4px;">Your expertise area:</label>
-          <input type="text" id="reviewer-expertise" placeholder="e.g. Spatial biology, IBD, Immunology" style="padding:8px 12px; border:1px solid #cbd5e0; border-radius:6px; width:100%; max-width:300px; font-size:0.95em;">
+        <div style="margin-bottom:14px;">
+          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:4px;">Your email (for saving progress across devices):</label>
+          <input type="email" id="reviewer-email" placeholder="e.g. jane.smith@institution.ac.uk">
+          <p style="font-size:0.8em; color:#718096; margin-top:4px;">Enter the same email on any device to continue where you left off.</p>
         </div>
         <div>
-          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:6px;">Your confidence in the field of Crohn's fistula (0 = no familiarity, 10 = similar to leading authors on IBD papers):</label>
-          <div class="score-buttons" id="field-confidence-btns"></div>
+          <label style="font-size:0.9em; color:#4a5568; display:block; margin-bottom:6px;">Your confidence in the field of Crohn's fistula (0 = no familiarity, 10 = understand biology in the Nature fistula paper):</label>
+          <div class="conf-buttons" id="field-confidence-btns"></div>
         </div>
       </div>
 
@@ -234,8 +261,8 @@ const POLL_DATA = {
     {id:"Q7", type:"ranking", text:"How does the epithelialisation of fistula affect other cells? For instance, do other cells become more fibrotic or inflammatory?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q8", type:"ranking", text:"What is the adaptive immune response you get in fistula? Can you differentiate strongly inflammatory fistula and stabilised ones?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q9", type:"ranking", text:"Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signatures?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
-    {id:"Q11", type:"ranking", text:"What is the difference in macrophage state of healthy vs fistula samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
-    {id:"Q12", type:"hypothesis", text:"Each system was asked to propose novel research directions for Crohn's disease from the data. Review their proposals below.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}}
+    {id:"Q10", type:"ranking", text:"What is the difference in macrophage state of healthy vs fistula samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q11", type:"hypothesis", text:"Each system was asked to propose novel research directions for Crohn's disease from the data. Review their proposals below.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}}
   ],
   final_question: {id:"FINAL", type:"open", text:"Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?"}
 };
@@ -244,35 +271,66 @@ const POLL_DATA = {
 // STATE
 // ============================================================
 let currentTab = 0;
-let hintsShown = {};
+let reviewerEmail = '';
+let autoSaveTimer = null;
+let backendSaveTimer = null;
 
 function init() {
   // Build field confidence buttons on landing
   const confBtns = document.getElementById('field-confidence-btns');
   for (let i = 0; i <= 10; i++) {
     const btn = document.createElement('button');
-    btn.className = 'score-btn' + (i <= 3 ? ' low' : i <= 6 ? ' mid' : ' high');
+    btn.className = 'conf-btn';
     btn.textContent = i;
     btn.onclick = () => selectFieldConfidence(i);
     btn.id = `fc-btn-${i}`;
     confBtns.appendChild(btn);
   }
 
-  // Try to restore
+  // Email change handler for sync
+  document.getElementById('reviewer-email').addEventListener('change', onEmailEntered);
+
+  // Try to restore from localStorage
   loadProgress();
 }
 
 function selectFieldConfidence(val) {
-  document.querySelectorAll('#field-confidence-btns .score-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#field-confidence-btns .conf-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById(`fc-btn-${val}`).classList.add('selected');
+}
+
+async function onEmailEntered() {
+  const email = document.getElementById('reviewer-email').value.trim();
+  if (!email) return;
+  reviewerEmail = email;
+
+  // Try to load from backend
+  try {
+    const resp = await fetch(BACKEND_URL + '?action=load&email=' + encodeURIComponent(email));
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data && data.reviewer && data.questions && Object.keys(data.questions).length > 0) {
+        if (confirm('Found saved progress for this email. Restore it?')) {
+          // Save to localStorage and reload
+          localStorage.setItem('ibd_expert_poll_v3', JSON.stringify(data));
+          loadProgress();
+        }
+      }
+    }
+  } catch(e) {
+    // Backend load failed silently — continue with local state
+    console.log('Backend sync load failed (expected if Apps Script not yet updated):', e.message);
+  }
 }
 
 function startReview() {
   const name = document.getElementById('reviewer-name').value.trim();
   if (!name) { alert('Please enter your name to continue.'); return; }
 
-  const confBtn = document.querySelector('#field-confidence-btns .score-btn.selected');
+  const confBtn = document.querySelector('#field-confidence-btns .conf-btn.selected');
   if (!confBtn) { alert('Please rate your confidence in Crohn\'s fistula (0-10).'); return; }
+
+  reviewerEmail = document.getElementById('reviewer-email').value.trim();
 
   document.getElementById('landing-page').classList.add('hidden');
   document.getElementById('review-page').classList.remove('hidden');
@@ -287,16 +345,18 @@ function buildReviewUI() {
   tabs.innerHTML = '';
 
   POLL_DATA.questions.forEach((q, idx) => {
+    // Display number is idx+1 (sequential)
+    const displayNum = idx + 1;
     const tab = document.createElement('div');
     tab.className = 'nav-tab';
-    tab.textContent = q.id;
+    tab.textContent = `Q${displayNum}`;
     tab.onclick = () => switchTab(idx);
     tabs.appendChild(tab);
 
     const content = document.createElement('div');
     content.className = 'tab-content';
     content.id = `tab-${idx}`;
-    content.innerHTML = q.type === 'ranking' ? buildRankingQ(q) : buildHypothesisQ(q);
+    content.innerHTML = q.type === 'ranking' ? buildRankingQ(q, displayNum) : buildHypothesisQ(q, displayNum);
     container.appendChild(content);
   });
 
@@ -315,132 +375,91 @@ function buildReviewUI() {
 
   switchTab(0);
   updateProgress();
-  setInterval(saveProgressSilent, AUTOSAVE_INTERVAL);
+
+  // Start auto-save timers
+  if (autoSaveTimer) clearInterval(autoSaveTimer);
+  autoSaveTimer = setInterval(saveProgressSilent, AUTOSAVE_INTERVAL);
 }
 
-function buildRankingQ(q) {
+function buildRankingQ(q, displayNum) {
   const labels = Object.keys(q.responses);
   let html = `<div class="card">
     <div class="hint" id="hint-${q.id}">
       <span class="hint-icon">i</span>
-      <span>Read all ${labels.length} responses below, then score each on Accuracy & Novelty, and finally rank them.</span>
+      <span>Read all ${labels.length} responses, then drag to rank them considering novelty and factfulness.</span>
       <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
     </div>
-    <h2>${q.id}: ${q.text}</h2>
+    <h2>Q${displayNum}: ${q.text}</h2>
     <h3 style="margin-top:20px;">Step 1: Read the responses</h3>`;
 
   labels.forEach(label => {
     html += `<div class="response-panel">
-      <div class="response-header" onclick="toggleResponse(this)">
-        <span>Response ${label}</span><span style="color:#718096; font-size:0.85em;">Click to expand</span>
+      <div class="response-header">
+        <span>Response ${label}</span>
       </div>
-      <div class="response-body">${escapeHtml(q.responses[label])}</div>
+      <div class="response-body" style="display:block;">${escapeHtml(q.responses[label])}</div>
     </div>`;
   });
 
-  html += `<h3>Step 2: Score each response</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:12px;">Rate independently (1 = poor, 10 = excellent)</p>`;
+  html += `<h3>Step 2: Rank overall (drag to reorder, best at top)</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Considering novelty and factfulness. Drag responses to reorder them.</p>
+    <ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}">`;
 
-  labels.forEach(label => {
-    html += `<div style="margin-bottom:18px; padding:12px; background:#f7fafc; border-radius:8px;">
-      <strong style="font-size:0.95em;">Response ${label}</strong>
-      <div class="score-group" style="margin-top:8px;">
-        <div class="score-group-label">Accuracy (factfulness):</div>
-        <div class="score-buttons" id="score-acc-${q.id}-${label}">`;
-    for (let i = 1; i <= 10; i++) {
-      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
-      html += `<button class="score-btn ${cls}" onclick="selectScore('acc','${q.id}','${label}',${i})">${i}</button>`;
-    }
-    html += `</div></div>
-      <div class="score-group">
-        <div class="score-group-label">Novelty (non-trivialness of findings):</div>
-        <div class="score-buttons" id="score-nov-${q.id}-${label}">`;
-    for (let i = 1; i <= 10; i++) {
-      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
-      html += `<button class="score-btn ${cls}" onclick="selectScore('nov','${q.id}','${label}',${i})">${i}</button>`;
-    }
-    html += `</div></div></div>`;
+  labels.forEach((label, i) => {
+    html += `<li class="drag-item" draggable="true" data-label="${label}">
+      <span class="drag-handle">&#9776;</span>
+      <span class="drag-rank-num">${i + 1}</span>
+      <span class="drag-item-label">Response ${label}</span>
+    </li>`;
   });
 
-  html += `<h3>Step 3: Rank overall (best to worst)</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">Which response is best overall? Click to assign rank.</p>`;
-
-  for (let rank = 1; rank <= labels.length; rank++) {
-    const rankLabel = rank === 1 ? 'Best' : rank === labels.length ? 'Worst' : `#${rank}`;
-    html += `<div style="margin-bottom:10px;">
-      <span style="font-size:0.88em; color:#4a5568; font-weight:600;">${rankLabel}:</span>
-      <div class="rank-options" id="rank-${q.id}-${rank}">`;
-    labels.forEach(label => {
-      html += `<div class="rank-option" onclick="selectRank('${q.id}',${rank},'${label}')">
-        <div class="rank-response">${label}</div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  }
-
-  html += `<h3 style="margin-top:20px;">Notes (optional)</h3>
-    <textarea id="notes-${q.id}" placeholder="What stood out? Anything surprising?"></textarea>
+  html += `</ul>
+    <h3 style="margin-top:20px;">Notes</h3>
+    <textarea id="notes-${q.id}" placeholder="explain your ranking"></textarea>
   </div>`;
   return html;
 }
 
-function buildHypothesisQ(q) {
+function buildHypothesisQ(q, displayNum) {
   const labels = Object.keys(q.responses);
   let html = `<div class="card">
     <div class="hint">
       <span class="hint-icon">i</span>
-      <span>This question tests hypothesis generation. Read each system's proposals, then indicate which are worth pursuing or already being investigated.</span>
+      <span>This question tests hypothesis generation. Read each system's proposals, tick which are worth investigating or already being investigated, then rank them.</span>
       <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
     </div>
-    <h2>${q.id}: Hypothesis Generation</h2>
+    <h2>Q${displayNum}: Future Research Directions <span style="font-size:0.7em; color:#718096; font-weight:400;">(optional)</span></h2>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:15px;">${q.text}</p>`;
 
   labels.forEach(label => {
     html += `<div class="response-panel">
-      <div class="response-header" onclick="toggleResponse(this)">
-        <span>System ${label} — Proposed Directions</span><span style="color:#718096; font-size:0.85em;">Click to expand</span>
+      <div class="response-header">
+        <span>System ${label} — Proposed Directions</span>
       </div>
-      <div class="response-body">${escapeHtml(q.responses[label])}
-        <div class="q12-scores">
-          <div class="score-group">
-            <div class="score-group-label">Novelty of proposals (1-10):</div>
-            <div class="score-buttons" id="score-hyp-nov-${q.id}-${label}">`;
-    for (let i = 1; i <= 10; i++) {
-      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
-      html += `<button class="score-btn ${cls}" onclick="selectScore('hyp-nov','${q.id}','${label}',${i})">${i}</button>`;
-    }
-    html += `</div></div>
-          <div class="score-group">
-            <div class="score-group-label">Feasibility (1-10):</div>
-            <div class="score-buttons" id="score-hyp-feas-${q.id}-${label}">`;
-    for (let i = 1; i <= 10; i++) {
-      const cls = i <= 3 ? 'low' : i <= 6 ? 'mid' : 'high';
-      html += `<button class="score-btn ${cls}" onclick="selectScore('hyp-feas','${q.id}','${label}',${i})">${i}</button>`;
-    }
-    html += `</div></div>
-          <div class="checkbox-row"><label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> Contains directions we are <strong>already investigating</strong></label></div>
-          <div class="checkbox-row"><label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> Contains directions <strong>worth pursuing</strong> (new to us)</label></div>
+      <div class="response-body" style="display:block;">${escapeHtml(q.responses[label])}
+        <div class="hyp-checkboxes">
+          <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> <strong>Worth investigating</strong></label></div>
+          <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> <strong>Already investigating</strong></label></div>
         </div>
       </div>
     </div>`;
   });
 
-  html += `<h3>Rank hypothesis quality (best to worst)</h3>`;
-  for (let rank = 1; rank <= labels.length; rank++) {
-    const rankLabel = rank === 1 ? 'Best' : rank === labels.length ? 'Worst' : `#${rank}`;
-    html += `<div style="margin-bottom:10px;">
-      <span style="font-size:0.88em; color:#4a5568; font-weight:600;">${rankLabel}:</span>
-      <div class="rank-options" id="rank-${q.id}-${rank}">`;
-    labels.forEach(label => {
-      html += `<div class="rank-option" onclick="selectRank('${q.id}',${rank},'${label}')">
-        <div class="rank-response">${label}</div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  }
+  html += `<h3>Rank hypothesis quality (drag to reorder, best at top)</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Considering novelty and factfulness.</p>
+    <ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}">`;
 
-  html += `<h3 style="margin-top:20px;">Notes (optional)</h3>
-    <textarea id="notes-${q.id}" placeholder="Which proposals stood out? Anything already being pursued in your lab?"></textarea>
+  labels.forEach((label, i) => {
+    html += `<li class="drag-item" draggable="true" data-label="${label}">
+      <span class="drag-handle">&#9776;</span>
+      <span class="drag-rank-num">${i + 1}</span>
+      <span class="drag-item-label">Response ${label}</span>
+    </li>`;
+  });
+
+  html += `</ul>
+    <h3 style="margin-top:20px;">Notes</h3>
+    <textarea id="notes-${q.id}" placeholder="explain your ranking"></textarea>
   </div>`;
   return html;
 }
@@ -448,11 +467,11 @@ function buildHypothesisQ(q) {
 function buildFinalQ() {
   return `<div class="card">
     <h2>Final Questions</h2>
-    <h3>Future Research Directions</h3>
+    <h3>Future Research Directions <span style="font-size:0.7em; color:#718096; font-weight:400;">(optional)</span></h3>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
-    <textarea id="final-directions" style="min-height:150px;" placeholder="List any research questions or directions you would pursue..."></textarea>
-    <h3 style="margin-top:20px;">Overall Feedback (optional)</h3>
-    <textarea id="final-feedback" placeholder="Comments about this evaluation or how the AI systems could improve?"></textarea>
+    <textarea id="final-directions" style="min-height:120px;" placeholder="List any research questions or directions you would pursue..."></textarea>
+    <h3 style="margin-top:20px;">Overall Feedback</h3>
+    <textarea id="final-feedback" style="min-height:120px;" placeholder="What do you think is the overall quality of response? Would you use an AI system like this to help with data analysis & hypothesis generation?"></textarea>
     <div class="btn-group" style="margin-top:20px;">
       <button class="btn btn-success btn-lg" onclick="submitResults()">Submit Evaluation</button>
     </div>
@@ -460,56 +479,172 @@ function buildFinalQ() {
 }
 
 // ============================================================
-// INTERACTIONS
+// DRAG AND DROP
 // ============================================================
 
-function toggleResponse(header) {
-  const body = header.nextElementSibling;
-  body.classList.toggle('expanded');
-  header.querySelector('span:last-child').textContent = body.classList.contains('expanded') ? 'Click to collapse' : 'Click to expand';
-}
+let dragSrcEl = null;
 
-function selectScore(dim, qid, label, val) {
-  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
-  container.querySelectorAll('.score-btn').forEach((b, i) => {
-    b.classList.toggle('selected', i + 1 === val);
+function initDragAndDrop() {
+  document.querySelectorAll('.drag-list').forEach(list => {
+    const items = list.querySelectorAll('.drag-item');
+    items.forEach(item => {
+      item.addEventListener('dragstart', handleDragStart);
+      item.addEventListener('dragover', handleDragOver);
+      item.addEventListener('dragenter', handleDragEnter);
+      item.addEventListener('dragleave', handleDragLeave);
+      item.addEventListener('drop', handleDrop);
+      item.addEventListener('dragend', handleDragEnd);
+
+      // Touch support for mobile
+      item.addEventListener('touchstart', handleTouchStart, {passive: false});
+      item.addEventListener('touchmove', handleTouchMove, {passive: false});
+      item.addEventListener('touchend', handleTouchEnd);
+    });
   });
-  saveProgressSilent();
 }
 
-function selectRank(qid, rank, label) {
-  const q = POLL_DATA.questions.find(q => q.id === qid);
-  const labels = Object.keys(q.responses);
-  const numRanks = labels.length;
+function handleDragStart(e) {
+  dragSrcEl = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', this.dataset.label);
+}
 
-  // Remove this label from any other rank for this question
-  for (let r = 1; r <= numRanks; r++) {
-    const opts = document.getElementById(`rank-${qid}-${r}`);
-    if (opts) {
-      opts.querySelectorAll('.rank-option').forEach(opt => {
-        if (opt.querySelector('.rank-response').textContent === label) {
-          if (r !== rank) opt.classList.remove('selected');
-        }
-      });
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDragEnter(e) {
+  e.preventDefault();
+  if (this !== dragSrcEl) {
+    this.classList.add('drag-over');
+  }
+}
+
+function handleDragLeave(e) {
+  this.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (dragSrcEl !== this) {
+    const list = this.parentNode;
+    const allItems = [...list.querySelectorAll('.drag-item')];
+    const fromIdx = allItems.indexOf(dragSrcEl);
+    const toIdx = allItems.indexOf(this);
+
+    if (fromIdx < toIdx) {
+      list.insertBefore(dragSrcEl, this.nextSibling);
+    } else {
+      list.insertBefore(dragSrcEl, this);
     }
+    updateRankNumbers(list);
+    updateProgress();
+    saveProgressSilent();
+  }
+  this.classList.remove('drag-over');
+}
+
+function handleDragEnd(e) {
+  document.querySelectorAll('.drag-item').forEach(item => {
+    item.classList.remove('dragging');
+    item.classList.remove('drag-over');
+  });
+}
+
+// Touch drag support for mobile
+let touchStartY = 0;
+let touchCurrentItem = null;
+let touchClone = null;
+let touchList = null;
+
+function handleTouchStart(e) {
+  touchCurrentItem = this;
+  touchList = this.parentNode;
+  touchStartY = e.touches[0].clientY;
+  this.classList.add('dragging');
+
+  // Create a visual clone for dragging feedback
+  touchClone = this.cloneNode(true);
+  touchClone.style.position = 'fixed';
+  touchClone.style.zIndex = '9999';
+  touchClone.style.opacity = '0.8';
+  touchClone.style.pointerEvents = 'none';
+  touchClone.style.width = this.offsetWidth + 'px';
+  const rect = this.getBoundingClientRect();
+  touchClone.style.left = rect.left + 'px';
+  touchClone.style.top = rect.top + 'px';
+  document.body.appendChild(touchClone);
+
+  e.preventDefault();
+}
+
+function handleTouchMove(e) {
+  if (!touchCurrentItem || !touchClone) return;
+  e.preventDefault();
+
+  const touchY = e.touches[0].clientY;
+  const touchX = e.touches[0].clientX;
+
+  // Move the clone
+  touchClone.style.top = (touchY - 20) + 'px';
+
+  // Find which item we're over
+  const items = [...touchList.querySelectorAll('.drag-item')];
+  items.forEach(item => item.classList.remove('drag-over'));
+
+  const overItem = document.elementFromPoint(touchX, touchY);
+  const dragItem = overItem ? overItem.closest('.drag-item') : null;
+  if (dragItem && dragItem !== touchCurrentItem && dragItem.parentNode === touchList) {
+    dragItem.classList.add('drag-over');
+  }
+}
+
+function handleTouchEnd(e) {
+  if (!touchCurrentItem || !touchClone) return;
+
+  // Find drop target
+  const touch = e.changedTouches[0];
+  const overEl = document.elementFromPoint(touch.clientX, touch.clientY);
+  const dropTarget = overEl ? overEl.closest('.drag-item') : null;
+
+  if (dropTarget && dropTarget !== touchCurrentItem && dropTarget.parentNode === touchList) {
+    const items = [...touchList.querySelectorAll('.drag-item')];
+    const fromIdx = items.indexOf(touchCurrentItem);
+    const toIdx = items.indexOf(dropTarget);
+    if (fromIdx < toIdx) {
+      touchList.insertBefore(touchCurrentItem, dropTarget.nextSibling);
+    } else {
+      touchList.insertBefore(touchCurrentItem, dropTarget);
+    }
+    updateRankNumbers(touchList);
+    updateProgress();
+    saveProgressSilent();
   }
 
-  // Remove any other label from this rank slot
-  const rankContainer = document.getElementById(`rank-${qid}-${rank}`);
-  rankContainer.querySelectorAll('.rank-option').forEach(opt => {
-    opt.classList.remove('selected');
-  });
-
-  // Select this one
-  rankContainer.querySelectorAll('.rank-option').forEach(opt => {
-    if (opt.querySelector('.rank-response').textContent === label) {
-      opt.classList.add('selected');
-    }
-  });
-
-  updateProgress();
-  saveProgressSilent();
+  // Clean up
+  touchCurrentItem.classList.remove('dragging');
+  document.querySelectorAll('.drag-item').forEach(item => item.classList.remove('drag-over'));
+  if (touchClone && touchClone.parentNode) {
+    touchClone.parentNode.removeChild(touchClone);
+  }
+  touchCurrentItem = null;
+  touchClone = null;
+  touchList = null;
 }
+
+function updateRankNumbers(list) {
+  const items = list.querySelectorAll('.drag-item');
+  items.forEach((item, idx) => {
+    item.querySelector('.drag-rank-num').textContent = idx + 1;
+  });
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
 
 function switchTab(idx) {
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
@@ -529,13 +664,10 @@ function updateProgress() {
   const total = POLL_DATA.questions.length;
 
   POLL_DATA.questions.forEach((q, idx) => {
-    const labels = Object.keys(q.responses);
-    let allRanked = true;
-    for (let r = 1; r <= labels.length; r++) {
-      const container = document.getElementById(`rank-${q.id}-${r}`);
-      if (container && !container.querySelector('.rank-option.selected')) { allRanked = false; break; }
-    }
-    if (allRanked) {
+    // A question is considered "ranked" once drag list exists (always true after build)
+    // We mark it completed if the user has reordered or it's been interacted with
+    const list = document.getElementById(`drag-list-${q.id}`);
+    if (list && list.dataset.touched === 'true') {
       completed++;
       document.querySelectorAll('.nav-tab')[idx]?.classList.add('completed');
     } else {
@@ -548,6 +680,10 @@ function updateProgress() {
   document.getElementById('progress-text').textContent = `${completed} / ${total} questions ranked`;
 }
 
+function markListTouched(list) {
+  list.dataset.touched = 'true';
+}
+
 function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 
@@ -555,33 +691,23 @@ function showToast(msg) { const t = document.getElementById('toast'); t.textCont
 // COLLECT / SAVE / SUBMIT
 // ============================================================
 
-function getSelectedScore(dim, qid, label) {
-  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
-  if (!container) return null;
-  const sel = container.querySelector('.score-btn.selected');
-  return sel ? parseInt(sel.textContent) : null;
-}
-
 function getRankings(qid) {
-  const q = POLL_DATA.questions.find(q => q.id === qid);
-  const labels = Object.keys(q.responses);
+  const list = document.getElementById(`drag-list-${qid}`);
+  if (!list) return {};
+  const items = list.querySelectorAll('.drag-item');
   const rankings = {};
-  for (let r = 1; r <= labels.length; r++) {
-    const container = document.getElementById(`rank-${qid}-${r}`);
-    if (container) {
-      const sel = container.querySelector('.rank-option.selected');
-      if (sel) rankings[sel.querySelector('.rank-response').textContent] = r;
-    }
-  }
+  items.forEach((item, idx) => {
+    rankings[item.dataset.label] = idx + 1;
+  });
   return rankings;
 }
 
 function collectResults() {
-  const confBtn = document.querySelector('#field-confidence-btns .score-btn.selected');
+  const confBtn = document.querySelector('#field-confidence-btns .conf-btn.selected');
   const results = {
     reviewer: {
       name: document.getElementById('reviewer-name').value,
-      expertise: document.getElementById('reviewer-expertise').value,
+      email: document.getElementById('reviewer-email').value.trim(),
       field_confidence: confBtn ? parseInt(confBtn.textContent) : null,
       submitted_at: new Date().toISOString()
     },
@@ -591,28 +717,25 @@ function collectResults() {
 
   POLL_DATA.questions.forEach(q => {
     const labels = Object.keys(q.responses);
-    const qr = { id: q.id, type: q.type, rankings: getRankings(q.id), notes: '', scores: {} };
+    const qr = { id: q.id, type: q.type, rankings: getRankings(q.id), notes: '' };
 
     const notes = document.getElementById(`notes-${q.id}`);
     qr.notes = notes ? notes.value : '';
 
-    if (q.type === 'ranking') {
+    if (q.type === 'hypothesis') {
+      qr.hypothesis_checkboxes = {};
       labels.forEach(label => {
-        qr.scores[label] = {
-          accuracy: getSelectedScore('acc', q.id, label),
-          novelty: getSelectedScore('nov', q.id, label)
-        };
-      });
-    } else if (q.type === 'hypothesis') {
-      labels.forEach(label => {
-        qr.scores[label] = {
-          novelty: getSelectedScore('hyp-nov', q.id, label),
-          feasibility: getSelectedScore('hyp-feas', q.id, label),
+        qr.hypothesis_checkboxes[label] = {
+          worth_investigating: document.getElementById(`hyp-worth-${q.id}-${label}`)?.checked || false,
           already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}`)?.checked || false,
-          worth_pursuing: document.getElementById(`hyp-worth-${q.id}-${label}`)?.checked || false,
         };
       });
     }
+
+    // Track if ranking was touched
+    const list = document.getElementById(`drag-list-${q.id}`);
+    qr.ranking_touched = list ? (list.dataset.touched === 'true') : false;
+
     results.questions[q.id] = qr;
   });
 
@@ -628,22 +751,34 @@ function saveProgressSilent() {
     const results = collectResults();
     results._savedAt = new Date().toISOString();
     results._isPartial = true;
-    localStorage.setItem('ibd_expert_poll_v2', JSON.stringify(results));
-    if (BACKEND_URL && results.reviewer && results.reviewer.name) {
-      fetch(BACKEND_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} }).catch(()=>{});
+    localStorage.setItem('ibd_expert_poll_v3', JSON.stringify(results));
+
+    // Also save to backend if we have email
+    const email = results.reviewer?.email || reviewerEmail;
+    if (BACKEND_URL && (results.reviewer?.name || email)) {
+      if (email) results._syncEmail = email;
+      fetch(BACKEND_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(results),
+        headers: {'Content-Type': 'text/plain;charset=utf-8'}
+      }).catch(() => {});
     }
   } catch(e) {}
 }
 function saveProgress() { saveProgressSilent(); showToast('Progress saved'); }
 
 function loadProgress() {
-  const saved = localStorage.getItem('ibd_expert_poll_v2');
+  const saved = localStorage.getItem('ibd_expert_poll_v3');
   if (!saved) return;
   try {
     const r = JSON.parse(saved);
     if (r.reviewer) {
       if (r.reviewer.name) document.getElementById('reviewer-name').value = r.reviewer.name;
-      if (r.reviewer.expertise) document.getElementById('reviewer-expertise').value = r.reviewer.expertise;
+      if (r.reviewer.email) {
+        document.getElementById('reviewer-email').value = r.reviewer.email;
+        reviewerEmail = r.reviewer.email;
+      }
       if (r.reviewer.field_confidence != null) selectFieldConfidence(r.reviewer.field_confidence);
     }
     // If they had already started, auto-enter review mode after a short delay
@@ -662,29 +797,39 @@ function loadProgress() {
 
 function restoreAnswers(r) {
   Object.entries(r.questions || {}).forEach(([qid, qr]) => {
-    // Restore scores
-    if (qr.scores) {
-      Object.entries(qr.scores).forEach(([label, scores]) => {
-        if (scores.accuracy) selectScoreFromLoad('acc', qid, label, scores.accuracy);
-        if (scores.novelty) selectScoreFromLoad('nov', qid, label, scores.novelty);
-        if (scores.feasibility) selectScoreFromLoad('hyp-feas', qid, label, scores.feasibility);
-        if (scores.novelty && qr.type === 'hypothesis') selectScoreFromLoad('hyp-nov', qid, label, scores.novelty);
-        if (scores.already_investigating) {
-          const cb = document.getElementById(`hyp-investigating-${qid}-${label}`);
-          if (cb) cb.checked = true;
+    // Restore rankings (reorder drag list)
+    if (qr.rankings && Object.keys(qr.rankings).length > 0) {
+      const list = document.getElementById(`drag-list-${qid}`);
+      if (list) {
+        const items = [...list.querySelectorAll('.drag-item')];
+        // Sort items by their saved rank
+        const sorted = items.sort((a, b) => {
+          const rankA = qr.rankings[a.dataset.label] || 99;
+          const rankB = qr.rankings[b.dataset.label] || 99;
+          return rankA - rankB;
+        });
+        sorted.forEach(item => list.appendChild(item));
+        updateRankNumbers(list);
+        if (qr.ranking_touched) {
+          list.dataset.touched = 'true';
         }
-        if (scores.worth_pursuing) {
+      }
+    }
+
+    // Restore hypothesis checkboxes
+    if (qr.hypothesis_checkboxes) {
+      Object.entries(qr.hypothesis_checkboxes).forEach(([label, checks]) => {
+        if (checks.worth_investigating) {
           const cb = document.getElementById(`hyp-worth-${qid}-${label}`);
           if (cb) cb.checked = true;
         }
+        if (checks.already_investigating) {
+          const cb = document.getElementById(`hyp-investigating-${qid}-${label}`);
+          if (cb) cb.checked = true;
+        }
       });
     }
-    // Restore rankings
-    if (qr.rankings) {
-      Object.entries(qr.rankings).forEach(([label, rank]) => {
-        if (rank) selectRank(qid, rank, label);
-      });
-    }
+
     // Restore notes
     if (qr.notes) {
       const notes = document.getElementById(`notes-${qid}`);
@@ -700,23 +845,21 @@ function restoreAnswers(r) {
   updateProgress();
 }
 
-function selectScoreFromLoad(dim, qid, label, val) {
-  const container = document.getElementById(`score-${dim}-${qid}-${label}`);
-  if (!container) return;
-  container.querySelectorAll('.score-btn').forEach((b, i) => {
-    b.classList.toggle('selected', i + 1 === val);
-  });
-}
-
 async function submitResults() {
   const results = collectResults();
   if (!results.reviewer.name) { alert('Please enter your name.'); return; }
+  results._isPartial = false;
   saveProgressSilent();
 
   if (BACKEND_URL) {
     try {
-      await fetch(BACKEND_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} });
-      showToast('Submitted successfully!');
+      await fetch(BACKEND_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(results),
+        headers: {'Content-Type': 'text/plain;charset=utf-8'}
+      });
+      showToast('Submitted successfully! Thank you.');
       return;
     } catch(e) { console.warn('Backend submit failed:', e); }
   }
@@ -736,7 +879,31 @@ function copyExport() {
   navigator.clipboard.writeText(document.getElementById('export-area').textContent).then(() => showToast('Copied'));
 }
 
-document.addEventListener('DOMContentLoaded', init);
+// Override drag-drop to mark as touched
+const origHandleDrop = handleDrop;
+function patchDragDrop() {
+  document.querySelectorAll('.drag-list').forEach(list => {
+    list.addEventListener('drop', function() {
+      markListTouched(this);
+    });
+  });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+
+  // Watch for drag-list creation (after buildReviewUI)
+  const observer = new MutationObserver(() => {
+    const lists = document.querySelectorAll('.drag-list');
+    if (lists.length > 0) {
+      initDragAndDrop();
+      patchDragDrop();
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.getElementById('questions-container') || document.body, { childList: true, subtree: true });
+});
 </script>
 </body>
 </html>
