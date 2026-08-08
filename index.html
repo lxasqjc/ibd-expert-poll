@@ -211,7 +211,7 @@ textarea {
 // ============================================================
 // CONFIG
 // ============================================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbx5fSSMU9LtW7i_Fvt47zWeoXfwgTbzf69dH1bWGFr-feFuAght1uKMkMD6R9QcoH4I8w/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzGBNCz-sHtarjs1f_xpHU5ebeFqZShi9TJb0V9eGAXCrgwi1PSYMW3u4vYHALwGImBtw/exec';
 const AUTOSAVE_INTERVAL = 30000; // 30s auto-save
 
 // ============================================================
@@ -630,7 +630,7 @@ function saveProgressSilent() {
     results._isPartial = true;
     localStorage.setItem('ibd_expert_poll_v2', JSON.stringify(results));
     if (BACKEND_URL && results.reviewer && results.reviewer.name) {
-      fetch(BACKEND_URL, { method:'POST', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} }).catch(()=>{});
+      fetch(BACKEND_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} }).catch(()=>{});
     }
   } catch(e) {}
 }
@@ -715,9 +715,9 @@ async function submitResults() {
 
   if (BACKEND_URL) {
     try {
-      const resp = await fetch(BACKEND_URL, { method:'POST', body:JSON.stringify(results), redirect:'follow', headers:{'Content-Type':'text/plain;charset=utf-8'} });
-      const data = await resp.json();
-      if (data.status === 'ok') { showToast('Submitted successfully!'); return; }
+      await fetch(BACKEND_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(results), headers:{'Content-Type':'text/plain;charset=utf-8'} });
+      showToast('Submitted successfully!');
+      return;
     } catch(e) { console.warn('Backend submit failed:', e); }
   }
   // Fallback: download JSON
