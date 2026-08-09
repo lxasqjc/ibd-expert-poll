@@ -127,19 +127,19 @@ input[type="text"], input[type="email"] {
 .hyp-checkbox-row { margin-bottom: 8px; }
 .hyp-checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
-/* Response colour coding */
-.response-x .response-header, .drag-item[data-label="X"] { border-left: 4px solid #e53e3e; }
-.response-x .response-header { background: #fff5f5; color: #c53030; }
-.response-y .response-header, .drag-item[data-label="Y"] { border-left: 4px solid #3182ce; }
-.response-y .response-header { background: #ebf8ff; color: #2c5282; }
-.response-z .response-header, .drag-item[data-label="Z"] { border-left: 4px solid #38a169; }
-.response-z .response-header { background: #f0fff4; color: #276749; }
-.drag-item[data-label="X"] .drag-rank-num { background: #e53e3e; }
-.drag-item[data-label="Y"] .drag-rank-num { background: #3182ce; }
-.drag-item[data-label="Z"] .drag-rank-num { background: #38a169; }
-.drag-item[data-label="X"] .drag-item-label { color: #c53030; }
-.drag-item[data-label="Y"] .drag-item-label { color: #2c5282; }
-.drag-item[data-label="Z"] .drag-item-label { color: #276749; }
+/* Response colour coding — neutral tones to avoid bias */
+.response-x .response-header, .drag-item[data-label="X"] { border-left: 4px solid #5a67d8; }
+.response-x .response-header { background: #ebf4ff; color: #3c4ac2; }
+.response-y .response-header, .drag-item[data-label="Y"] { border-left: 4px solid #d69e2e; }
+.response-y .response-header { background: #fefcf0; color: #975a16; }
+.response-z .response-header, .drag-item[data-label="Z"] { border-left: 4px solid #6b46c1; }
+.response-z .response-header { background: #f5f0ff; color: #553c9a; }
+.drag-item[data-label="X"] .drag-rank-num { background: #5a67d8; }
+.drag-item[data-label="Y"] .drag-rank-num { background: #d69e2e; }
+.drag-item[data-label="Z"] .drag-rank-num { background: #6b46c1; }
+.drag-item[data-label="X"] .drag-item-label { color: #3c4ac2; }
+.drag-item[data-label="Y"] .drag-item-label { color: #975a16; }
+.drag-item[data-label="Z"] .drag-item-label { color: #553c9a; }
 
 /* Confidence buttons */
 .conf-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
@@ -176,9 +176,9 @@ input[type="text"], input[type="email"] {
   cursor: grab; user-select: none; transition: all 0.15s; border: 2px solid;
 }
 .rank-card:active { cursor: grabbing; transform: scale(0.95); }
-.rank-card[data-label="X"] { background: #fff5f5; border-color: #e53e3e; color: #c53030; }
-.rank-card[data-label="Y"] { background: #ebf8ff; border-color: #3182ce; color: #2c5282; }
-.rank-card[data-label="Z"] { background: #f0fff4; border-color: #38a169; color: #276749; }
+.rank-card[data-label="X"] { background: #ebf4ff; border-color: #5a67d8; color: #3c4ac2; }
+.rank-card[data-label="Y"] { background: #fefcf0; border-color: #d69e2e; color: #975a16; }
+.rank-card[data-label="Z"] { background: #f5f0ff; border-color: #6b46c1; color: #553c9a; }
 .rank-card.dragging { opacity: 0.4; }
 .rank-slots { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
 .rank-slot {
@@ -188,9 +188,9 @@ input[type="text"], input[type="email"] {
 }
 .rank-slot .slot-label { color: #a0aec0; font-size: 0.82em; font-weight: 600; }
 .rank-slot.filled { border-style: solid; }
-.rank-slot.filled[data-filled="X"] { border-color: #e53e3e; background: #fff5f5; }
-.rank-slot.filled[data-filled="Y"] { border-color: #3182ce; background: #ebf8ff; }
-.rank-slot.filled[data-filled="Z"] { border-color: #38a169; background: #f0fff4; }
+.rank-slot.filled[data-filled="X"] { border-color: #5a67d8; background: #ebf4ff; }
+.rank-slot.filled[data-filled="Y"] { border-color: #d69e2e; background: #fefcf0; }
+.rank-slot.filled[data-filled="Z"] { border-color: #6b46c1; background: #f5f0ff; }
 .rank-slot.drag-over { border-color: #805ad5; background: #faf5ff; box-shadow: 0 0 0 3px rgba(128,90,213,0.2); }
 .rank-arrow { font-size: 1.4em; color: #a0aec0; font-weight: 700; }
 
