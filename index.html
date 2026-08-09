@@ -185,7 +185,6 @@ input[type="text"], input[type="email"] {
         <h3 style="margin-top:0;">Ranking criteria</h3>
         <p style="font-size:0.92em; margin-bottom:8px;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to our Nature fistula paper? (vs generic textbook knowledge)</p>
         <p style="font-size:0.92em;"><strong>Factfulness</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
-        <p style="font-size:0.85em; color:#718096; margin-top:8px; font-style:italic;">Note: We ask you to rank rather than score because it is difficult to score factfulness for novel findings — relative comparison is more reliable.</p>
       </div>
 
       <div class="card" style="text-align:left; margin-top:15px;">
@@ -219,6 +218,7 @@ input[type="text"], input[type="email"] {
     <div id="questions-container"></div>
 
     <div class="btn-group">
+      <button class="btn btn-secondary" onclick="backToProfile()">Back to Profile</button>
       <button class="btn btn-secondary" onclick="prevQuestion()">Previous</button>
       <button class="btn btn-primary" onclick="nextQuestion()">Next</button>
       <button class="btn btn-secondary" onclick="saveProgress()">Save Progress</button>
@@ -255,12 +255,12 @@ const POLL_DATA = {
     {id:"Q1", type:"ranking", text:"What are the fibroblast subtypes and what are their biological significance? What are their marker genes & key pathways?", responses:{"X":"[Placeholder — actual responses will be populated]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q2", type:"ranking", text:"Based on the data, how do different types of fibroblasts interact and drive fistula formation in Crohn's disease?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q3", type:"ranking", text:"What do the TWIST1 overexpressed fibroblasts in the gut do?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
-    {id:"Q4", type:"ranking", text:"What changes do you observe in epithelium in fistula formation? Any difference in epithelium on healthy VS diseased but not fistulising VS fistulising samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q4", type:"ranking", text:"What changes do you observe in epithelium in fistula formation? Any difference in epithelium on healthy VS diseased and not fistulising VS fistulising samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q5", type:"ranking", text:"On the colon samples, compare the difference between Crohn's fistula and diverticular fistula.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q6", type:"ranking", text:"How does the location of fistula affect the inflammatory signature? For instance, does the signature becomes more myeloid, more lymphoid, more cytotoxic, or more innate, as fistula location changes?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q7", type:"ranking", text:"How does the epithelialisation of fistula affect other cells? For instance, do other cells become more fibrotic or inflammatory?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q8", type:"ranking", text:"What is the adaptive immune response you get in fistula? Can you differentiate strongly inflammatory fistula and stabilised ones?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
-    {id:"Q9", type:"ranking", text:"Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signatures?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
+    {id:"Q9", type:"ranking", text:"Why do you not get healing in many fistula? Is it due to an overreactive immune response? Is it due to the lack of regulatory T cells or too much pro-inflammatory signature?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q10", type:"ranking", text:"What is the difference in macrophage state of healthy vs fistula samples?", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}},
     {id:"Q11", type:"hypothesis", text:"Each system was asked to propose novel research directions for Crohn's disease from the data. Review their proposals below.", responses:{"X":"[Placeholder]","Y":"[Placeholder]","Z":"[Placeholder]"}}
   ],
@@ -297,6 +297,13 @@ function init() {
 function selectFieldConfidence(val) {
   document.querySelectorAll('#field-confidence-btns .conf-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById(`fc-btn-${val}`).classList.add('selected');
+}
+
+function selectQuestionConfidence(qid, val) {
+  const container = document.getElementById(`q-conf-btns-${qid}`);
+  if (container) container.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById(`qc-btn-${qid}-${val}`);
+  if (btn) btn.classList.add('selected');
 }
 
 async function onEmailEntered() {
@@ -373,6 +380,22 @@ function buildReviewUI() {
   fc.innerHTML = buildFinalQ();
   container.appendChild(fc);
 
+  // Build per-question confidence buttons
+  POLL_DATA.questions.forEach(q => {
+    const confContainer = document.getElementById(`q-conf-btns-${q.id}`);
+    if (confContainer) {
+      for (let i = 0; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'conf-btn';
+        btn.textContent = i;
+        btn.type = 'button';
+        btn.onclick = () => selectQuestionConfidence(q.id, i);
+        btn.id = `qc-btn-${q.id}-${i}`;
+        confContainer.appendChild(btn);
+      }
+    }
+  });
+
   switchTab(0);
   updateProgress();
 
@@ -414,8 +437,11 @@ function buildRankingQ(q, displayNum) {
   });
 
   html += `</ul>
+    <h3 style="margin-top:20px;">Confidence in your ranking for this question</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
+    <div class="conf-buttons" id="q-conf-btns-${q.id}"></div>
     <h3 style="margin-top:20px;">Notes</h3>
-    <textarea id="notes-${q.id}" placeholder="explain your ranking"></textarea>
+    <textarea id="notes-${q.id}" placeholder="explain your ranking (optional)"></textarea>
   </div>`;
   return html;
 }
@@ -441,6 +467,7 @@ function buildHypothesisQ(q, displayNum) {
           <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-worth-${q.id}-${label}"> <strong>Worth investigating</strong></label></div>
           <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-investigating-${q.id}-${label}"> <strong>Already investigating</strong></label></div>
         </div>
+        <textarea id="hyp-comment-${q.id}-${label}" style="margin-top:8px; min-height:50px;" placeholder="Comment on System ${label}'s proposals (optional)"></textarea>
       </div>
     </div>`;
   });
@@ -458,8 +485,11 @@ function buildHypothesisQ(q, displayNum) {
   });
 
   html += `</ul>
+    <h3 style="margin-top:20px;">Confidence in your ranking for this question</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
+    <div class="conf-buttons" id="q-conf-btns-${q.id}"></div>
     <h3 style="margin-top:20px;">Notes</h3>
-    <textarea id="notes-${q.id}" placeholder="explain your ranking"></textarea>
+    <textarea id="notes-${q.id}" placeholder="explain your ranking (optional)"></textarea>
   </div>`;
   return html;
 }
@@ -467,11 +497,16 @@ function buildHypothesisQ(q, displayNum) {
 function buildFinalQ() {
   return `<div class="card">
     <h2>Final Questions</h2>
-    <h3>Future Research Directions <span style="font-size:0.7em; color:#718096; font-weight:400;">(optional)</span></h3>
+    <h3>Future Research Directions</h3>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
     <textarea id="final-directions" style="min-height:120px;" placeholder="List any research questions or directions you would pursue..."></textarea>
+    <h3 style="margin-top:20px;">Questions for AI</h3>
+    <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">What questions do you want to ask the AI agent on the data?</p>
+    <textarea id="final-ai-questions" style="min-height:120px;" placeholder="What would you ask an AI agent to investigate from the Crohn's fistula spatial transcriptomics data?"></textarea>
     <h3 style="margin-top:20px;">Overall Feedback</h3>
     <textarea id="final-feedback" style="min-height:120px;" placeholder="What do you think is the overall quality of response? Would you use an AI system like this to help with data analysis & hypothesis generation?"></textarea>
+    <h3 style="margin-top:20px;">Anything else you want to tell us?</h3>
+    <textarea id="final-other" style="min-height:80px;" placeholder="Any other comments, suggestions, or observations..."></textarea>
     <div class="btn-group" style="margin-top:20px;">
       <button class="btn btn-success btn-lg" onclick="submitResults()">Submit Evaluation</button>
     </div>
@@ -653,6 +688,13 @@ function switchTab(idx) {
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
+function backToProfile() {
+  saveProgressSilent();
+  document.getElementById('review-page').classList.add('hidden');
+  document.getElementById('landing-page').classList.remove('hidden');
+  window.scrollTo({top: 0});
+}
+
 function nextQuestion() {
   const total = POLL_DATA.questions.length + 1;
   if (currentTab < total - 1) switchTab(currentTab + 1);
@@ -722,13 +764,23 @@ function collectResults() {
     const notes = document.getElementById(`notes-${q.id}`);
     qr.notes = notes ? notes.value : '';
 
+    // Per-question confidence
+    const confContainer = document.getElementById(`q-conf-btns-${q.id}`);
+    if (confContainer) {
+      const selBtn = confContainer.querySelector('.conf-btn.selected');
+      qr.confidence = selBtn ? parseInt(selBtn.textContent) : null;
+    }
+
     if (q.type === 'hypothesis') {
       qr.hypothesis_checkboxes = {};
+      qr.hypothesis_comments = {};
       labels.forEach(label => {
         qr.hypothesis_checkboxes[label] = {
           worth_investigating: document.getElementById(`hyp-worth-${q.id}-${label}`)?.checked || false,
           already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}`)?.checked || false,
         };
+        const comment = document.getElementById(`hyp-comment-${q.id}-${label}`);
+        qr.hypothesis_comments[label] = comment ? comment.value : '';
       });
     }
 
@@ -741,7 +793,9 @@ function collectResults() {
 
   results.final = {
     directions: document.getElementById('final-directions')?.value || '',
-    feedback: document.getElementById('final-feedback')?.value || ''
+    ai_questions: document.getElementById('final-ai-questions')?.value || '',
+    feedback: document.getElementById('final-feedback')?.value || '',
+    other: document.getElementById('final-other')?.value || ''
   };
   return results;
 }
@@ -816,7 +870,12 @@ function restoreAnswers(r) {
       }
     }
 
-    // Restore hypothesis checkboxes
+    // Restore per-question confidence
+    if (qr.confidence != null) {
+      selectQuestionConfidence(qid, qr.confidence);
+    }
+
+    // Restore hypothesis checkboxes and comments
     if (qr.hypothesis_checkboxes) {
       Object.entries(qr.hypothesis_checkboxes).forEach(([label, checks]) => {
         if (checks.worth_investigating) {
@@ -826,6 +885,14 @@ function restoreAnswers(r) {
         if (checks.already_investigating) {
           const cb = document.getElementById(`hyp-investigating-${qid}-${label}`);
           if (cb) cb.checked = true;
+        }
+      });
+    }
+    if (qr.hypothesis_comments) {
+      Object.entries(qr.hypothesis_comments).forEach(([label, text]) => {
+        if (text) {
+          const ta = document.getElementById(`hyp-comment-${qid}-${label}`);
+          if (ta) ta.value = text;
         }
       });
     }
@@ -839,8 +906,12 @@ function restoreAnswers(r) {
   if (r.final) {
     const fd = document.getElementById('final-directions');
     if (fd && r.final.directions) fd.value = r.final.directions;
+    const faq = document.getElementById('final-ai-questions');
+    if (faq && r.final.ai_questions) faq.value = r.final.ai_questions;
     const ff = document.getElementById('final-feedback');
     if (ff && r.final.feedback) ff.value = r.final.feedback;
+    const fo = document.getElementById('final-other');
+    if (fo && r.final.other) fo.value = r.final.other;
   }
   updateProgress();
 }
