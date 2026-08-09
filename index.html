@@ -1421,8 +1421,9 @@ function restoreAnswers(r) {
         sorted.forEach(item => list.appendChild(item));
         updateRankNumbers(list);
       }
-      if (qr.ranking_touched) {
-        // Directly set the confirmed state without re-validating slots
+      // Infer touched if ranking_touched flag set OR all 3 responses ranked
+      const wasTouched = qr.ranking_touched || Object.keys(qr.rankings).length >= 3;
+      if (wasTouched) {
         const dragList = document.getElementById(`drag-list-${qid}`);
         if (dragList) dragList.dataset.touched = 'true';
         const status = document.getElementById(`rank-status-${qid}`);
@@ -1462,6 +1463,17 @@ function restoreAnswers(r) {
             if (ta) ta.value = pd.comment;
           }
         });
+      });
+      // Mark Q11 drag-list as touched if any ratings exist, then update status
+      const hasAnyRating = Object.values(qr.hypothesis_proposals).some(props =>
+        props.some(pd => pd.novelty != null || pd.feasibility != null || pd.worth_investigating || pd.already_investigating)
+      );
+      if (hasAnyRating) {
+        const dragList = document.getElementById(`drag-list-${qid}`);
+        if (dragList) dragList.dataset.touched = 'true';
+      }
+      Object.keys(qr.hypothesis_proposals).forEach(label => {
+        updateHypStatus(qid, label);
       });
     }
 
