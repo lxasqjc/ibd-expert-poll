@@ -87,7 +87,60 @@ function doPost(e) {
 }
 
 function doGet(e) {
+  const action = (e && e.parameter && e.parameter.action) || '';
+  const email = (e && e.parameter && e.parameter.email) || '';
+
+  if (action === 'load' && email) {
+    return loadProgress(email);
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({status: 'ok', message: 'Expert Poll backend is running'}))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Load the most recent saved state for a given email.
+ * Searches the "Raw" sheet in reverse order for the latest entry
+ * matching the email (case-insensitive), then returns its JSON payload.
+ */
+function loadProgress(email) {
+  try {
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    const rawSheet = ss.getSheetByName('Raw');
+    if (!rawSheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({status: 'not_found', message: 'No submissions yet'}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const data = rawSheet.getDataRange().getValues();
+    const emailLower = email.toLowerCase().trim();
+
+    // Walk backwards to find the most recent matching entry
+    for (let i = data.length - 1; i >= 1; i--) {
+      const jsonStr = data[i][3]; // Column D = JSON payload
+      if (!jsonStr) continue;
+      try {
+        const parsed = JSON.parse(jsonStr);
+        const savedEmail = (parsed.reviewer && parsed.reviewer.email) || '';
+        if (savedEmail.toLowerCase().trim() === emailLower) {
+          return ContentService
+            .createTextOutput(JSON.stringify({status: 'ok', data: parsed}))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+      } catch (parseErr) {
+        continue;
+      }
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({status: 'not_found', message: 'No saved progress for this email'}))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({status: 'error', message: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
