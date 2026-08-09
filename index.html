@@ -324,7 +324,7 @@ input[type="text"], input[type="email"] {
 // ============================================================
 // CONFIG
 // ============================================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwy2QbkfN8YRfyG8GxznkJNmeyyVJ9p9PI7xOCm9BhPHRmrXzF_8tTrGVUnhVTpsUeM7g/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbweAIBs7EkWjsq0zBNeeGdqQmaEcCgoaaQaRjct10Iv8EKC54FkRIgAlkAInzyliQ_r/exec';
 const AUTOSAVE_INTERVAL = 30000; // 30s auto-save
 
 // ============================================================
@@ -373,8 +373,9 @@ function init() {
     confBtns.appendChild(btn);
   }
 
-  // Email change handler for sync
+  // Email change handler for sync (blur also catches mobile/autofill cases)
   document.getElementById('reviewer-email').addEventListener('change', onEmailEntered);
+  document.getElementById('reviewer-email').addEventListener('blur', onEmailEntered);
 
   // Try to restore from localStorage
   loadProgress();
@@ -402,31 +403,33 @@ function selectHypRating(qid, label, pIdx, dim, val) {
   saveProgressSilent();
 }
 
+let _lastCheckedEmail = '';
 async function onEmailEntered() {
   const email = document.getElementById('reviewer-email').value.trim();
-  if (!email) return;
+  if (!email || email === _lastCheckedEmail) return;
+  _lastCheckedEmail = email;
   reviewerEmail = email;
 
   // Try to load from backend
   try {
-    const resp = await fetch(BACKEND_URL + '?action=load&email=' + encodeURIComponent(email));
+    const resp = await fetch(BACKEND_URL + '?action=load&email=' + encodeURIComponent(email), {redirect: 'follow'});
     if (resp.ok) {
-      const data = await resp.json();
-      if (data && data.reviewer && data.questions && Object.keys(data.questions).length > 0) {
+      const json = await resp.json();
+      // Backend returns {status: 'ok', data: {...payload...}}
+      const payload = json.data || json;
+      if (payload && payload.reviewer && payload.questions && Object.keys(payload.questions).length > 0) {
         if (confirm('Found saved progress for this email. Restore it?')) {
-          // Save to localStorage and reload
-          localStorage.setItem('ibd_expert_poll_v3', JSON.stringify(data));
+          localStorage.setItem('ibd_expert_poll_v3', JSON.stringify(payload));
           loadProgress();
         }
       }
     }
   } catch(e) {
-    // Backend load failed silently — continue with local state
-    console.log('Backend sync load failed (expected if Apps Script not yet updated):', e.message);
+    console.log('Backend sync load failed:', e.message);
   }
 }
 
-function startReview() {
+async function startReview() {
   const name = document.getElementById('reviewer-name').value.trim();
   if (!name) { alert('Please enter your name to continue.'); return; }
 
@@ -435,9 +438,31 @@ function startReview() {
 
   reviewerEmail = document.getElementById('reviewer-email').value.trim();
 
+  // Check backend for saved progress if email provided and not already loaded from localStorage
+  let restoredPayload = null;
+  if (reviewerEmail && BACKEND_URL && !localStorage.getItem('ibd_expert_poll_v3')) {
+    try {
+      const resp = await fetch(BACKEND_URL + '?action=load&email=' + encodeURIComponent(reviewerEmail), {redirect: 'follow'});
+      if (resp.ok) {
+        const json = await resp.json();
+        const payload = json.data || json;
+        if (payload && payload.reviewer && payload.questions && Object.keys(payload.questions).length > 0) {
+          if (confirm('Found saved progress for this email. Restore it?')) {
+            localStorage.setItem('ibd_expert_poll_v3', JSON.stringify(payload));
+            restoredPayload = payload;
+          }
+        }
+      }
+    } catch(e) {}
+  }
+
   document.getElementById('landing-page').classList.add('hidden');
   document.getElementById('review-page').classList.remove('hidden');
   buildReviewUI();
+
+  if (restoredPayload) {
+    restoreAnswers(restoredPayload);
+  }
   saveProgressSilent();
 }
 

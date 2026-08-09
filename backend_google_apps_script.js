@@ -123,7 +123,7 @@ function loadProgress(email) {
       if (!jsonStr) continue;
       try {
         const parsed = JSON.parse(jsonStr);
-        const savedEmail = (parsed.reviewer && parsed.reviewer.email) || '';
+        const savedEmail = (parsed.reviewer && parsed.reviewer.email) || parsed._syncEmail || '';
         if (savedEmail.toLowerCase().trim() === emailLower) {
           return ContentService
             .createTextOutput(JSON.stringify({status: 'ok', data: parsed}))
