@@ -127,6 +127,20 @@ input[type="text"], input[type="email"] {
 .hyp-checkbox-row { margin-bottom: 8px; }
 .hyp-checkbox-row label { font-size: 0.9em; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
+/* Response colour coding */
+.response-x .response-header, .drag-item[data-label="X"] { border-left: 4px solid #e53e3e; }
+.response-x .response-header { background: #fff5f5; color: #c53030; }
+.response-y .response-header, .drag-item[data-label="Y"] { border-left: 4px solid #3182ce; }
+.response-y .response-header { background: #ebf8ff; color: #2c5282; }
+.response-z .response-header, .drag-item[data-label="Z"] { border-left: 4px solid #38a169; }
+.response-z .response-header { background: #f0fff4; color: #276749; }
+.drag-item[data-label="X"] .drag-rank-num { background: #e53e3e; }
+.drag-item[data-label="Y"] .drag-rank-num { background: #3182ce; }
+.drag-item[data-label="Z"] .drag-rank-num { background: #38a169; }
+.drag-item[data-label="X"] .drag-item-label { color: #c53030; }
+.drag-item[data-label="Y"] .drag-item-label { color: #2c5282; }
+.drag-item[data-label="Z"] .drag-item-label { color: #276749; }
+
 /* Confidence buttons */
 .conf-buttons { display: flex; gap: 4px; flex-wrap: wrap; }
 .conf-btn {
@@ -139,7 +153,7 @@ input[type="text"], input[type="email"] {
 .conf-btn.selected { border-color: #3182ce; background: #3182ce; color: #fff; }
 
 /* Ranking confirmation */
-.rank-status { margin-top: 10px; padding: 8px 14px; border-radius: 8px; font-size: 0.88em; font-weight: 600; }
+.rank-status { margin-top: 10px; margin-bottom: 12px; padding: 8px 14px; border-radius: 8px; font-size: 0.88em; font-weight: 600; }
 .rank-status.unconfirmed { background: #fed7d7; color: #c53030; border: 1px solid #feb2b2; }
 .rank-status.confirmed { background: #c6f6d5; color: #276749; border: 1px solid #9ae6b4; }
 .confirm-rank-btn {
@@ -148,6 +162,49 @@ input[type="text"], input[type="email"] {
 }
 .confirm-rank-btn:hover { background: #38a169; color: #fff; }
 .confirm-rank-btn.confirmed { background: #38a169; color: #fff; pointer-events: none; }
+
+/* Rank slot UI */
+.rank-slots-container { margin: 12px 0; }
+.rank-pool {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  padding: 12px; background: #f7fafc; border: 2px dashed #cbd5e0; border-radius: 10px;
+  min-height: 60px; align-items: center; justify-content: center;
+}
+.rank-pool:empty::after { content: 'All cards placed!'; color: #a0aec0; font-size: 0.88em; font-style: italic; }
+.rank-card {
+  padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 0.92em;
+  cursor: grab; user-select: none; transition: all 0.15s; border: 2px solid;
+}
+.rank-card:active { cursor: grabbing; transform: scale(0.95); }
+.rank-card[data-label="X"] { background: #fff5f5; border-color: #e53e3e; color: #c53030; }
+.rank-card[data-label="Y"] { background: #ebf8ff; border-color: #3182ce; color: #2c5282; }
+.rank-card[data-label="Z"] { background: #f0fff4; border-color: #38a169; color: #276749; }
+.rank-card.dragging { opacity: 0.4; }
+.rank-slots { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.rank-slot {
+  width: 140px; min-height: 56px; border: 2px dashed #a0aec0; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  background: #fff; position: relative;
+}
+.rank-slot .slot-label { color: #a0aec0; font-size: 0.82em; font-weight: 600; }
+.rank-slot.filled { border-style: solid; }
+.rank-slot.filled[data-filled="X"] { border-color: #e53e3e; background: #fff5f5; }
+.rank-slot.filled[data-filled="Y"] { border-color: #3182ce; background: #ebf8ff; }
+.rank-slot.filled[data-filled="Z"] { border-color: #38a169; background: #f0fff4; }
+.rank-slot.drag-over { border-color: #805ad5; background: #faf5ff; box-shadow: 0 0 0 3px rgba(128,90,213,0.2); }
+.rank-arrow { font-size: 1.4em; color: #a0aec0; font-weight: 700; }
+
+/* Thank you overlay */
+.thankyou-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+  z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.thankyou-modal {
+  background: #fff; border-radius: 16px; max-width: 500px; width: 100%; padding: 40px;
+  text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+}
+.thankyou-modal h1 { color: #276749; font-size: 2em; margin-bottom: 16px; }
+.thankyou-modal p { color: #4a5568; font-size: 1.05em; line-height: 1.6; margin-bottom: 12px; }
 
 /* Preview modal */
 .preview-overlay {
@@ -197,7 +254,7 @@ input[type="text"], input[type="email"] {
     <div class="landing">
       <h1>Expert Blind Evaluation</h1>
       <p>Crohn's Fistula — Spatial Transcriptomics</p>
-      <p style="color:#4a5568; font-size:0.95em; margin-top:8px;">Three AI systems answered biological questions about Crohn's disease fistula using data in our Nature fistula paper.</p>
+      <p style="color:#4a5568; font-size:0.95em; margin-top:8px;">Three AI systems answered biological questions about Crohn's disease fistula using data in <a href="https://www.nature.com/articles/s41586-025-09744-y" target="_blank" style="color:#3182ce; text-decoration:underline; font-weight:600;">Spatial fibroblast niches define Crohn's fistulae</a>.</p>
       <p style="color:#718096; font-size:0.88em; margin-top:6px;">Responses are <strong>blinded</strong> — you won't know which system produced which answer. Labels (X, Y, Z) are randomized per question.</p>
 
       <div class="card card-accent" style="text-align:left; margin-top:25px;">
@@ -213,7 +270,7 @@ input[type="text"], input[type="email"] {
 
       <div class="card" style="text-align:left; margin-top:20px;">
         <h3 style="margin-top:0;">Ranking criteria</h3>
-        <p style="font-size:0.92em; margin-bottom:8px;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to our Nature fistula paper? (vs generic textbook knowledge)</p>
+        <p style="font-size:0.92em; margin-bottom:8px;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to <a href="https://www.nature.com/articles/s41586-025-09744-y" target="_blank" style="color:#3182ce;">our Nature fistula paper</a>? (vs generic textbook knowledge)</p>
         <p style="font-size:0.92em;"><strong>Factfulness</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
       </div>
 
@@ -469,7 +526,15 @@ function buildReviewUI() {
 function buildProfileTab() {
   const name = document.getElementById('reviewer-name').value || '';
   const email = document.getElementById('reviewer-email').value || '';
-  return `<div class="card card-accent">
+  return `<div class="card" style="margin-bottom:16px;">
+    <h2 style="margin-top:0;">About This Evaluation</h2>
+    <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">Three AI systems answered biological questions about Crohn's disease fistula using data in <a href="https://www.nature.com/articles/s41586-025-09744-y" target="_blank" style="color:#3182ce; text-decoration:underline; font-weight:600;">Spatial fibroblast niches define Crohn's fistulae</a>.</p>
+    <p style="font-size:0.88em; color:#718096; margin-bottom:12px;">Responses are <strong>blinded</strong> — you won't know which system produced which answer. Labels (X, Y, Z) are randomized per question.</p>
+    <h3 style="margin-top:12px;">Ranking criteria</h3>
+    <p style="font-size:0.92em; margin-bottom:8px;"><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to <a href="https://www.nature.com/articles/s41586-025-09744-y" target="_blank" style="color:#3182ce;">our Nature fistula paper</a>? (vs generic textbook knowledge)</p>
+    <p style="font-size:0.92em;"><strong>Factfulness</strong> — Are the biological claims correct? Are findings supported by evidence?</p>
+  </div>
+  <div class="card card-accent">
     <h2 style="margin-top:0;">Your Profile</h2>
     <p style="font-size:0.9em; color:#4a5568; margin-bottom:16px;">Edit your profile details. Changes are saved automatically.</p>
     <div style="margin-bottom:14px;">
@@ -525,7 +590,7 @@ function buildRankingQ(q, displayNum) {
     <h3 style="margin-top:20px;">Step 1: Read the responses</h3>`;
 
   labels.forEach(label => {
-    html += `<div class="response-panel">
+    html += `<div class="response-panel response-${label.toLowerCase()}">
       <div class="response-header">
         <span>Response ${label}</span>
       </div>
@@ -533,11 +598,26 @@ function buildRankingQ(q, displayNum) {
     </div>`;
   });
 
-  html += `<h3>Step 2: Rank overall (drag to reorder, best at top)</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Considering novelty and factfulness. Drag responses to reorder them, then confirm your ranking.</p>
-    <div class="rank-status unconfirmed" id="rank-status-${q.id}">Ranking not yet confirmed — please drag to reorder, then click "Confirm Ranking" below</div>
-    <ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" style="opacity:0.6;">`;
+  html += `<h3>Step 2: Rank overall (best at top)</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Drag from the unranked pool into the ranking slots below.</p>
+    <div class="rank-status unconfirmed" id="rank-status-${q.id}">Ranking not yet confirmed — drag cards into rank slots, then click "Confirm Ranking"</div>
+    <div class="rank-slots-container" id="rank-container-${q.id}" data-qid="${q.id}">
+      <div class="rank-pool" id="rank-pool-${q.id}">`;
+  labels.forEach(label => {
+    html += `<div class="rank-card" draggable="true" data-label="${label}" data-qid="${q.id}">Response ${label}</div>`;
+  });
+  html += `</div>
+      <div class="rank-slots">
+        <div class="rank-slot" data-rank="1" data-qid="${q.id}"><span class="slot-label">Rank 1 (Best)</span></div>
+        <span class="rank-arrow">&gt;</span>
+        <div class="rank-slot" data-rank="2" data-qid="${q.id}"><span class="slot-label">Rank 2</span></div>
+        <span class="rank-arrow">&gt;</span>
+        <div class="rank-slot" data-rank="3" data-qid="${q.id}"><span class="slot-label">Rank 3</span></div>
+      </div>
+    </div>`;
 
+  // Keep hidden drag-list for data collection compatibility
+  html += `<ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" style="display:none;">`;
   labels.forEach((label, i) => {
     html += `<li class="drag-item" draggable="true" data-label="${label}">
       <span class="drag-handle">&#9776;</span>
@@ -545,8 +625,9 @@ function buildRankingQ(q, displayNum) {
       <span class="drag-item-label">Response ${label}</span>
     </li>`;
   });
+  html += `</ul>`;
 
-  html += `</ul>
+  html += `
     <button class="confirm-rank-btn" id="confirm-rank-btn-${q.id}" onclick="confirmRanking('${q.id}')">Confirm Ranking</button>
     <h3 style="margin-top:20px;">Confidence in your ranking for this question</h3>
     <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
@@ -570,32 +651,54 @@ function buildHypothesisQ(q, displayNum) {
 
   labels.forEach(label => {
     const proposals = parseProposals(q.responses[label]);
-    html += `<div class="response-panel">
+    html += `<div class="response-panel response-${label.toLowerCase()}" id="hyp-panel-${q.id}-${label}">
       <div class="response-header">
-        <span>System ${label} — Proposed Directions (${proposals.length} proposal${proposals.length !== 1 ? 's' : ''})</span>
+        <span>System ${label} — ${proposals.length} proposal${proposals.length !== 1 ? 's' : ''}</span>
+        <span class="hyp-scroll-status" id="hyp-status-${q.id}-${label}" style="font-size:0.78em; padding:3px 8px; border-radius:4px; background:#fed7d7; color:#c53030;">Scroll down to review all</span>
       </div>
       <div class="response-body" style="display:block;">`;
 
     proposals.forEach((proposal, pIdx) => {
-      html += `<div style="margin-bottom:16px; padding:12px; background:#fff; border:1px solid #e2e8f0; border-radius:8px;">
-        <p style="font-weight:600; margin-bottom:8px; color:#2d3748;">Proposal ${pIdx + 1}: ${escapeHtml(proposal.title)}</p>
-        <p style="font-size:0.88em; color:#4a5568; margin-bottom:10px;">${escapeHtml(proposal.body)}</p>
-        <div class="hyp-checkboxes" style="margin-bottom:8px;">
-          <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-worth-${q.id}-${label}-p${pIdx}"> <strong>Worth investigating</strong></label></div>
-          <div class="hyp-checkbox-row"><label><input type="checkbox" id="hyp-investigating-${q.id}-${label}-p${pIdx}"> <strong>Already investigating</strong></label></div>
+      html += `<div style="margin-bottom:16px; padding:14px; background:#fff; border:1px solid #e2e8f0; border-radius:8px;">
+        <p style="font-weight:700; margin-bottom:8px; color:#2d3748; font-size:1em;">Proposal ${pIdx + 1}: ${escapeHtml(proposal.title)}</p>
+        <p style="font-size:0.9em; color:#4a5568; margin-bottom:12px; line-height:1.5;">${escapeHtml(proposal.body)}</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+          <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:0.95em;">
+            <input type="checkbox" id="hyp-worth-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#38a169;" onchange="updateHypStatus('${q.id}','${label}')">
+            <strong>Worth investigating</strong>
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:0.95em;">
+            <input type="checkbox" id="hyp-investigating-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#3182ce;" onchange="updateHypStatus('${q.id}','${label}')">
+            <strong>Already investigating</strong>
+          </label>
         </div>
-        <textarea id="hyp-comment-${q.id}-${label}-p${pIdx}" style="min-height:40px; font-size:0.88em;" placeholder="Comment on this proposal (optional)"></textarea>
+        <textarea id="hyp-comment-${q.id}-${label}-p${pIdx}" style="min-height:40px; font-size:0.9em;" placeholder="Comment on this proposal (optional)"></textarea>
       </div>`;
     });
 
     html += `</div></div>`;
   });
 
-  html += `<h3>Rank hypothesis quality (drag to reorder, best at top)</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Considering novelty and factfulness. Drag to reorder, then confirm.</p>
-    <div class="rank-status unconfirmed" id="rank-status-${q.id}">Ranking not yet confirmed — please drag to reorder, then click "Confirm Ranking" below</div>
-    <ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" style="opacity:0.6;">`;
+  html += `<h3>Rank hypothesis quality (best at top)</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Drag from the pool into rank slots below.</p>
+    <div class="rank-status unconfirmed" id="rank-status-${q.id}">Ranking not yet confirmed — drag cards into rank slots, then click "Confirm Ranking"</div>
+    <div class="rank-slots-container" id="rank-container-${q.id}" data-qid="${q.id}">
+      <div class="rank-pool" id="rank-pool-${q.id}">`;
+  labels.forEach(label => {
+    html += `<div class="rank-card" draggable="true" data-label="${label}" data-qid="${q.id}">System ${label}</div>`;
+  });
+  html += `</div>
+      <div class="rank-slots">
+        <div class="rank-slot" data-rank="1" data-qid="${q.id}"><span class="slot-label">Rank 1 (Best)</span></div>
+        <span class="rank-arrow">&gt;</span>
+        <div class="rank-slot" data-rank="2" data-qid="${q.id}"><span class="slot-label">Rank 2</span></div>
+        <span class="rank-arrow">&gt;</span>
+        <div class="rank-slot" data-rank="3" data-qid="${q.id}"><span class="slot-label">Rank 3</span></div>
+      </div>
+    </div>`;
 
+  // Hidden drag-list for data collection compatibility
+  html += `<ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" style="display:none;">`;
   labels.forEach((label, i) => {
     html += `<li class="drag-item" draggable="true" data-label="${label}">
       <span class="drag-handle">&#9776;</span>
@@ -603,7 +706,6 @@ function buildHypothesisQ(q, displayNum) {
       <span class="drag-item-label">Response ${label}</span>
     </li>`;
   });
-
   html += `</ul>
     <button class="confirm-rank-btn" id="confirm-rank-btn-${q.id}" onclick="confirmRanking('${q.id}')">Confirm Ranking</button>
     <h3 style="margin-top:20px;">Confidence in your ranking for this question</h3>
@@ -858,6 +960,17 @@ function markListTouched(list) {
 }
 
 function confirmRanking(qid) {
+  // Check if all slots are filled
+  const slots = document.querySelectorAll(`.rank-slot[data-qid="${qid}"]`);
+  if (slots.length > 0) {
+    let allFilled = true;
+    slots.forEach(s => { if (!s.querySelector('.rank-card')) allFilled = false; });
+    if (!allFilled) {
+      alert('Please drag all responses into the rank slots before confirming.');
+      return;
+    }
+  }
+
   const list = document.getElementById(`drag-list-${qid}`);
   if (list) {
     list.dataset.touched = 'true';
@@ -956,8 +1069,7 @@ function showPreviewAndSubmit() {
 
   previewHtml += `<div class="submit-reminder">Please ensure you are happy with your responses before submitting. You can still edit after submission by reloading and using the same email.</div>
     <div class="preview-actions">
-      <button class="btn btn-success btn-lg" onclick="closePreview();submitResults()">Submit</button>
-      <button class="btn btn-secondary" onclick="closePreview();downloadPreview()">Download a Copy</button>
+      <button class="btn btn-success btn-lg" onclick="closePreview();submitAndDownload()">Submit & Download a Copy</button>
       <button class="btn btn-secondary" onclick="closePreview()">Go Back & Edit</button>
     </div>
   </div></div>`;
@@ -970,9 +1082,13 @@ function closePreview() {
   if (overlay) overlay.remove();
 }
 
+function submitAndDownload() {
+  downloadPreview();
+  submitResults();
+}
+
 function downloadPreview() {
   const results = collectResults();
-  // Generate a readable text summary
   let text = '=== Expert Blind Evaluation — Response Summary ===\n\n';
   text += `Reviewer: ${results.reviewer.name}\n`;
   text += `Email: ${results.reviewer.email || 'not provided'}\n`;
@@ -1004,7 +1120,46 @@ function downloadPreview() {
   a.href = URL.createObjectURL(blob);
   a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.txt`;
   a.click();
-  showToast('Copy downloaded');
+}
+
+function updateHypStatus(qid, label) {
+  const panel = document.getElementById(`hyp-panel-${qid}-${label}`);
+  const status = document.getElementById(`hyp-status-${qid}-${label}`);
+  if (!panel || !status) return;
+  // Count how many proposals have at least one checkbox ticked
+  const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
+  const proposals = panel.querySelectorAll('[id^="hyp-worth-"]');
+  let reviewed = 0;
+  const numProposals = proposals.length;
+  for (let i = 0; i < numProposals; i++) {
+    const worth = document.getElementById(`hyp-worth-${qid}-${label}-p${i}`);
+    const investigating = document.getElementById(`hyp-investigating-${qid}-${label}-p${i}`);
+    if ((worth && worth.checked) || (investigating && investigating.checked)) reviewed++;
+  }
+  if (reviewed >= numProposals) {
+    status.style.background = '#c6f6d5';
+    status.style.color = '#276749';
+    status.textContent = 'All proposals reviewed';
+    panel.style.borderColor = '#9ae6b4';
+  } else {
+    status.style.background = '#fed7d7';
+    status.style.color = '#c53030';
+    status.textContent = `${reviewed}/${numProposals} reviewed — scroll down`;
+    panel.style.borderColor = '#feb2b2';
+  }
+}
+
+function showThankYou() {
+  const html = `<div class="thankyou-overlay" id="thankyou-overlay">
+    <div class="thankyou-modal">
+      <h1>Thank You!</h1>
+      <p>Your evaluation has been submitted successfully.</p>
+      <p>Your expert review is invaluable for our research. A copy has been downloaded for your records.</p>
+      <p style="margin-top:20px; font-size:0.9em; color:#718096;">You can close this page or reload to review/edit your responses.</p>
+      <button class="btn btn-primary btn-lg" style="margin-top:24px;" onclick="document.getElementById('thankyou-overlay').remove()">Close</button>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
 }
 
 function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
@@ -1015,14 +1170,27 @@ function showToast(msg) { const t = document.getElementById('toast'); t.textCont
 // ============================================================
 
 function getRankings(qid) {
+  // Try slot-based ranking first
+  const slots = document.querySelectorAll(`.rank-slot[data-qid="${qid}"]`);
+  if (slots.length > 0) {
+    const slotRankings = {};
+    slots.forEach(slot => {
+      const card = slot.querySelector('.rank-card');
+      if (card) {
+        slotRankings[card.dataset.label] = parseInt(slot.dataset.rank);
+      }
+    });
+    if (Object.keys(slotRankings).length > 0) return slotRankings;
+  }
+  // Fallback: old drag-list
   const list = document.getElementById(`drag-list-${qid}`);
   if (!list) return {};
   const items = list.querySelectorAll('.drag-item');
-  const rankings = {};
+  const listRankings = {};
   items.forEach((item, idx) => {
-    rankings[item.dataset.label] = idx + 1;
+    listRankings[item.dataset.label] = idx + 1;
   });
-  return rankings;
+  return listRankings;
 }
 
 function collectResults() {
@@ -1136,8 +1304,16 @@ function loadProgress() {
 
 function restoreAnswers(r) {
   Object.entries(r.questions || {}).forEach(([qid, qr]) => {
-    // Restore rankings (reorder drag list)
+    // Restore slot-based rankings
     if (qr.rankings && Object.keys(qr.rankings).length > 0) {
+      Object.entries(qr.rankings).forEach(([label, rank]) => {
+        const card = document.querySelector(`.rank-card[data-label="${label}"][data-qid="${qid}"]`);
+        const slot = document.querySelector(`.rank-slot[data-rank="${rank}"][data-qid="${qid}"]`);
+        if (card && slot) {
+          placeCardInSlot(card, slot);
+        }
+      });
+      // Also restore hidden drag list
       const list = document.getElementById(`drag-list-${qid}`);
       if (list) {
         const items = [...list.querySelectorAll('.drag-item')];
@@ -1148,9 +1324,15 @@ function restoreAnswers(r) {
         });
         sorted.forEach(item => list.appendChild(item));
         updateRankNumbers(list);
-        if (qr.ranking_touched) {
-          confirmRanking(qid);
-        }
+      }
+      if (qr.ranking_touched) {
+        // Directly set the confirmed state without re-validating slots
+        const dragList = document.getElementById(`drag-list-${qid}`);
+        if (dragList) dragList.dataset.touched = 'true';
+        const status = document.getElementById(`rank-status-${qid}`);
+        if (status) { status.className = 'rank-status confirmed'; status.textContent = 'Ranking confirmed'; }
+        const btn = document.getElementById(`confirm-rank-btn-${qid}`);
+        if (btn) { btn.classList.add('confirmed'); btn.textContent = 'Confirmed'; }
       }
     }
 
@@ -1204,6 +1386,7 @@ async function submitResults() {
   results._isPartial = false;
   saveProgressSilent();
 
+  let submitted = false;
   if (BACKEND_URL) {
     try {
       await fetch(BACKEND_URL, {
@@ -1212,22 +1395,24 @@ async function submitResults() {
         body: JSON.stringify(results),
         headers: {'Content-Type': 'text/plain;charset=utf-8'}
       });
-      hasSubmitted = true;
-      showToast('Submitted successfully! Thank you.');
-      return;
+      submitted = true;
     } catch(e) { console.warn('Backend submit failed:', e); }
   }
-  // Fallback: download JSON
+
+  if (!submitted) {
+    // Fallback: also download JSON
+    const json = JSON.stringify(results, null, 2);
+    document.getElementById('export-container').classList.remove('hidden');
+    document.getElementById('export-area').textContent = json;
+    const blob = new Blob([json], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+
   hasSubmitted = true;
-  const json = JSON.stringify(results, null, 2);
-  document.getElementById('export-container').classList.remove('hidden');
-  document.getElementById('export-area').textContent = json;
-  const blob = new Blob([json], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `expert_poll_${results.reviewer.name.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  showToast('JSON downloaded — please email to chen.jin1@astrazeneca.net');
+  showThankYou();
 }
 
 function copyExport() {
@@ -1242,6 +1427,104 @@ function patchDragDrop() {
       markListTouched(this);
     });
   });
+}
+
+// Rank-slot drag and drop
+function initRankSlots() {
+  let draggedCard = null;
+
+  document.querySelectorAll('.rank-card').forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+      draggedCard = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', card.dataset.label);
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      document.querySelectorAll('.rank-slot').forEach(s => s.classList.remove('drag-over'));
+      draggedCard = null;
+    });
+    // Touch support
+    card.addEventListener('touchstart', (e) => {
+      draggedCard = card;
+      card.classList.add('dragging');
+      e.preventDefault();
+    }, {passive: false});
+    card.addEventListener('touchend', (e) => {
+      if (!draggedCard) return;
+      const touch = e.changedTouches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      const slot = target ? target.closest('.rank-slot') : null;
+      const pool = target ? target.closest('.rank-pool') : null;
+      if (slot && slot.dataset.qid === draggedCard.dataset.qid) {
+        placeCardInSlot(draggedCard, slot);
+      } else if (pool) {
+        returnCardToPool(draggedCard);
+      }
+      draggedCard.classList.remove('dragging');
+      document.querySelectorAll('.rank-slot').forEach(s => s.classList.remove('drag-over'));
+      draggedCard = null;
+    });
+  });
+
+  document.querySelectorAll('.rank-slot').forEach(slot => {
+    slot.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+    slot.addEventListener('dragenter', (e) => { e.preventDefault(); slot.classList.add('drag-over'); });
+    slot.addEventListener('dragleave', () => { slot.classList.remove('drag-over'); });
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if (draggedCard && draggedCard.dataset.qid === slot.dataset.qid) {
+        placeCardInSlot(draggedCard, slot);
+      }
+    });
+  });
+
+  // Allow dropping back to pool
+  document.querySelectorAll('.rank-pool').forEach(pool => {
+    pool.addEventListener('dragover', (e) => { e.preventDefault(); });
+    pool.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (draggedCard) returnCardToPool(draggedCard);
+    });
+  });
+}
+
+function placeCardInSlot(card, slot) {
+  const qid = card.dataset.qid;
+  // If slot already has a card, return it to pool
+  const existing = slot.querySelector('.rank-card');
+  if (existing) returnCardToPool(existing);
+  // If card is in another slot, clear that slot
+  const prevSlot = card.parentElement.closest('.rank-slot');
+  if (prevSlot) {
+    prevSlot.classList.remove('filled');
+    prevSlot.removeAttribute('data-filled');
+    const slotLabel = prevSlot.querySelector('.slot-label');
+    if (slotLabel) slotLabel.style.display = '';
+  }
+  // Place card
+  slot.appendChild(card);
+  slot.classList.add('filled');
+  slot.setAttribute('data-filled', card.dataset.label);
+  const slotLabel = slot.querySelector('.slot-label');
+  if (slotLabel) slotLabel.style.display = 'none';
+  saveProgressSilent();
+}
+
+function returnCardToPool(card) {
+  const qid = card.dataset.qid;
+  const pool = document.getElementById(`rank-pool-${qid}`);
+  const prevSlot = card.parentElement.closest('.rank-slot');
+  if (prevSlot) {
+    prevSlot.classList.remove('filled');
+    prevSlot.removeAttribute('data-filled');
+    const slotLabel = prevSlot.querySelector('.slot-label');
+    if (slotLabel) slotLabel.style.display = '';
+  }
+  if (pool) pool.appendChild(card);
+  saveProgressSilent();
 }
 
 // Warn before leaving if they haven't submitted
@@ -1264,6 +1547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lists.length > 0) {
       initDragAndDrop();
       patchDragDrop();
+      initRankSlots();
       observer.disconnect();
     }
   });
