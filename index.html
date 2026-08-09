@@ -392,6 +392,13 @@ function selectQuestionConfidence(qid, val) {
   if (btn) btn.classList.add('selected');
 }
 
+function selectHypRating(qid, label, pIdx, dim, val) {
+  const container = document.getElementById(`hyp-${dim}-btns-${qid}-${label}-p${pIdx}`);
+  if (container) container.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById(`hyp-${dim}-${qid}-${label}-p${pIdx}-${val}`);
+  if (btn) btn.classList.add('selected');
+}
+
 async function onEmailEntered() {
   const email = document.getElementById('reviewer-email').value.trim();
   if (!email) return;
@@ -493,6 +500,32 @@ function buildReviewUI() {
         confContainer.appendChild(btn);
       }
     }
+    // Build hypothesis novelty/feasibility rating buttons
+    if (q.type === 'hypothesis') {
+      const labels = Object.keys(q.responses);
+      labels.forEach(label => {
+        const proposals = parseProposals(q.responses[label]);
+        proposals.forEach((p, pIdx) => {
+          ['novelty', 'feasibility'].forEach(dim => {
+            const container = document.getElementById(`hyp-${dim}-btns-${q.id}-${label}-p${pIdx}`);
+            if (container) {
+              for (let i = 0; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'conf-btn';
+                btn.textContent = i;
+                btn.type = 'button';
+                btn.style.width = '30px';
+                btn.style.height = '30px';
+                btn.style.fontSize = '0.8em';
+                btn.id = `hyp-${dim}-${q.id}-${label}-p${pIdx}-${i}`;
+                btn.onclick = () => selectHypRating(q.id, label, pIdx, dim, i);
+                container.appendChild(btn);
+              }
+            }
+          });
+        });
+      });
+    }
   });
 
   // Also build profile field-confidence buttons in-review
@@ -590,11 +623,16 @@ function buildRankingQ(q, displayNum) {
     <h3 style="margin-top:20px;">Step 1: Read the responses</h3>`;
 
   labels.forEach(label => {
+    const analysisData = q.data_analysis ? q.data_analysis[label] : null;
     html += `<div class="response-panel response-${label.toLowerCase()}">
       <div class="response-header">
         <span>Response ${label}</span>
       </div>
-      <div class="response-body" style="display:block;">${escapeHtml(q.responses[label])}</div>
+      <div class="response-body" style="display:block;">${escapeHtml(q.responses[label])}${analysisData ? `
+        <details style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:10px;">
+          <summary style="cursor:pointer; color:#3182ce; font-weight:600; font-size:0.9em;">View model's data analysis output (if you are not sure)</summary>
+          <div style="margin-top:8px; font-size:0.85em; color:#4a5568; white-space:pre-wrap;">${escapeHtml(analysisData)}</div>
+        </details>` : ''}</div>
     </div>`;
   });
 
@@ -643,7 +681,7 @@ function buildHypothesisQ(q, displayNum) {
   let html = `<div class="card">
     <div class="hint">
       <span class="hint-icon">i</span>
-      <span>This question tests hypothesis generation. Each system proposes multiple research directions. For each proposal, tick whether it's worth investigating or already being investigated, and leave comments. Then rank the systems overall.</span>
+      <span>Each system proposes multiple research directions. For each proposal, rate its <strong>novelty</strong> and <strong>feasibility</strong>, and tick whether it's worth investigating. You can select both, either, or none of the checkboxes for each proposal.</span>
       <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
     </div>
     <h2>Q${displayNum}: Future Research Directions</h2>
@@ -662,6 +700,16 @@ function buildHypothesisQ(q, displayNum) {
       html += `<div style="margin-bottom:16px; padding:14px; background:#fff; border:1px solid #e2e8f0; border-radius:8px;">
         <p style="font-weight:700; margin-bottom:8px; color:#2d3748; font-size:1em;">Proposal ${pIdx + 1}: ${escapeHtml(proposal.title)}</p>
         <p style="font-size:0.9em; color:#4a5568; margin-bottom:12px; line-height:1.5;">${escapeHtml(proposal.body)}</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+          <div style="background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px;">
+            <p style="font-size:0.82em; font-weight:600; color:#4a5568; margin-bottom:6px;">Novelty (0=known, 10=very novel)</p>
+            <div class="conf-buttons" id="hyp-novelty-btns-${q.id}-${label}-p${pIdx}"></div>
+          </div>
+          <div style="background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px;">
+            <p style="font-size:0.82em; font-weight:600; color:#4a5568; margin-bottom:6px;">Feasibility (0=impossible on our data, 10=highly feasible)</p>
+            <div class="conf-buttons" id="hyp-feasibility-btns-${q.id}-${label}-p${pIdx}"></div>
+          </div>
+        </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
           <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:0.95em;">
             <input type="checkbox" id="hyp-worth-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#38a169;" onchange="updateHypStatus('${q.id}','${label}')">
@@ -679,36 +727,14 @@ function buildHypothesisQ(q, displayNum) {
     html += `</div></div>`;
   });
 
-  html += `<h3>Rank hypothesis quality (best at top)</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:10px;">Drag from the pool into rank slots below.</p>
-    <div class="rank-status unconfirmed" id="rank-status-${q.id}">Ranking not yet confirmed — drag cards into rank slots, then click "Confirm Ranking"</div>
-    <div class="rank-slots-container" id="rank-container-${q.id}" data-qid="${q.id}">
-      <div class="rank-pool" id="rank-pool-${q.id}">`;
-  labels.forEach(label => {
-    html += `<div class="rank-card" draggable="true" data-label="${label}" data-qid="${q.id}">System ${label}</div>`;
-  });
-  html += `</div>
-      <div class="rank-slots">
-        <div class="rank-slot" data-rank="1" data-qid="${q.id}"><span class="slot-label">Rank 1 (Best)</span></div>
-        <span class="rank-arrow">&gt;</span>
-        <div class="rank-slot" data-rank="2" data-qid="${q.id}"><span class="slot-label">Rank 2</span></div>
-        <span class="rank-arrow">&gt;</span>
-        <div class="rank-slot" data-rank="3" data-qid="${q.id}"><span class="slot-label">Rank 3</span></div>
-      </div>
-    </div>`;
-
-  // Hidden drag-list for data collection compatibility
-  html += `<ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" style="display:none;">`;
+  // No overall ranking for Q11 — novelty + feasibility per proposal replaces it
+  // Hidden drag-list marked as auto-confirmed for progress tracking
+  html += `<ul class="drag-list" id="drag-list-${q.id}" data-qid="${q.id}" data-touched="true" style="display:none;">`;
   labels.forEach((label, i) => {
-    html += `<li class="drag-item" draggable="true" data-label="${label}">
-      <span class="drag-handle">&#9776;</span>
-      <span class="drag-rank-num">${i + 1}</span>
-      <span class="drag-item-label">Response ${label}</span>
-    </li>`;
+    html += `<li class="drag-item" data-label="${label}"><span class="drag-rank-num">${i + 1}</span></li>`;
   });
   html += `</ul>
-    <button class="confirm-rank-btn" id="confirm-rank-btn-${q.id}" onclick="confirmRanking('${q.id}')">Confirm Ranking</button>
-    <h3 style="margin-top:20px;">Confidence in your ranking for this question</h3>
+    <h3 style="margin-top:20px;">Confidence in your ratings for this question</h3>
     <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
     <div class="conf-buttons" id="q-conf-btns-${q.id}"></div>
     <h3 style="margin-top:20px;">Notes</h3>
@@ -720,16 +746,16 @@ function buildHypothesisQ(q, displayNum) {
 function buildFinalQ() {
   return `<div class="card">
     <h2>Final Questions</h2>
-    <h3>Future Research Directions</h3>
+    <h3>Future Research Directions <span style="font-size:0.75em; color:#a0aec0; font-weight:400;">(optional)</span></h3>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">Which other questions would you like to investigate or are already investigating using data in the Crohn's fistula paper?</p>
-    <textarea id="final-directions" style="min-height:120px;" placeholder="List any research questions or directions you would pursue..."></textarea>
+    <textarea id="final-directions" style="min-height:120px;" placeholder="(Optional) List any research questions or directions you would pursue..."></textarea>
     <h3 style="margin-top:20px;">Questions for AI</h3>
     <p style="font-size:0.92em; color:#4a5568; margin-bottom:10px;">What questions do you want to ask the AI agent on the data?</p>
     <textarea id="final-ai-questions" style="min-height:120px;" placeholder="What would you ask an AI agent to investigate from the Crohn's fistula spatial transcriptomics data?"></textarea>
     <h3 style="margin-top:20px;">Overall Feedback</h3>
     <textarea id="final-feedback" style="min-height:120px;" placeholder="What do you think is the overall quality of response? Would you use an AI system like this to help with data analysis & hypothesis generation?"></textarea>
-    <h3 style="margin-top:20px;">Anything else you want to tell us?</h3>
-    <textarea id="final-other" style="min-height:80px;" placeholder="Any other comments, suggestions, or observations..."></textarea>
+    <h3 style="margin-top:20px;">Anything else you want to tell us? <span style="font-size:0.75em; color:#a0aec0; font-weight:400;">(optional)</span></h3>
+    <textarea id="final-other" style="min-height:80px;" placeholder="(Optional) Any other comments, suggestions, or observations..."></textarea>
     <div class="submit-reminder" style="margin-top:20px;">Please click "Review & Submit" below when you are finished. You will see a preview of all your responses before final submission.</div>
     <div class="btn-group" style="margin-top:15px;">
       <button class="btn btn-success btn-lg" onclick="showPreviewAndSubmit()">Review & Submit</button>
@@ -1226,8 +1252,12 @@ function collectResults() {
         const proposals = parseProposals(q.responses[label]);
         const proposalData = [];
         proposals.forEach((p, pIdx) => {
+          const noveltyBtn = document.querySelector(`#hyp-novelty-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
+          const feasibilityBtn = document.querySelector(`#hyp-feasibility-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
           proposalData.push({
             title: p.title,
+            novelty: noveltyBtn ? parseInt(noveltyBtn.textContent) : null,
+            feasibility: feasibilityBtn ? parseInt(feasibilityBtn.textContent) : null,
             worth_investigating: document.getElementById(`hyp-worth-${q.id}-${label}-p${pIdx}`)?.checked || false,
             already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}-p${pIdx}`)?.checked || false,
             comment: document.getElementById(`hyp-comment-${q.id}-${label}-p${pIdx}`)?.value || ''
@@ -1345,6 +1375,14 @@ function restoreAnswers(r) {
     if (qr.hypothesis_proposals) {
       Object.entries(qr.hypothesis_proposals).forEach(([label, proposals]) => {
         proposals.forEach((pd, pIdx) => {
+          if (pd.novelty != null) {
+            const btn = document.getElementById(`hyp-novelty-${qid}-${label}-p${pIdx}-${pd.novelty}`);
+            if (btn) btn.classList.add('selected');
+          }
+          if (pd.feasibility != null) {
+            const btn = document.getElementById(`hyp-feasibility-${qid}-${label}-p${pIdx}-${pd.feasibility}`);
+            if (btn) btn.classList.add('selected');
+          }
           if (pd.worth_investigating) {
             const cb = document.getElementById(`hyp-worth-${qid}-${label}-p${pIdx}`);
             if (cb) cb.checked = true;
