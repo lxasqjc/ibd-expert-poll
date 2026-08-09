@@ -403,6 +403,21 @@ function selectHypRating(qid, label, pIdx, dim, val) {
   saveProgressSilent();
 }
 
+function toggleHypConf(checkbox, kind, qid, label, pIdx) {
+  const confDiv = document.getElementById(`hyp-${kind}-conf-${qid}-${label}-p${pIdx}`);
+  if (confDiv) confDiv.style.display = checkbox.checked ? 'block' : 'none';
+}
+
+function selectHypCheckboxConf(qid, label, pIdx, kind, val) {
+  const container = document.getElementById(`hyp-${kind}-conf-btns-${qid}-${label}-p${pIdx}`);
+  if (container) container.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.getElementById(`hyp-${kind}-conf-${qid}-${label}-p${pIdx}-${val}`);
+  if (btn) btn.classList.add('selected');
+  const dragList = document.getElementById(`drag-list-${qid}`);
+  if (dragList) { dragList.dataset.touched = 'true'; updateProgress(); }
+  saveProgressSilent();
+}
+
 let _lastCheckedEmail = '';
 async function onEmailEntered() {
   const email = document.getElementById('reviewer-email').value.trim();
@@ -548,6 +563,24 @@ function buildReviewUI() {
                 btn.style.padding = '0';
                 btn.id = `hyp-${dim}-${q.id}-${label}-p${pIdx}-${i}`;
                 btn.onclick = () => selectHypRating(q.id, label, pIdx, dim, i);
+                container.appendChild(btn);
+              }
+            }
+          });
+          ['worth', 'investigating'].forEach(kind => {
+            const container = document.getElementById(`hyp-${kind}-conf-btns-${q.id}-${label}-p${pIdx}`);
+            if (container) {
+              for (let i = 0; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'conf-btn';
+                btn.textContent = i;
+                btn.type = 'button';
+                btn.style.width = '26px';
+                btn.style.height = '26px';
+                btn.style.fontSize = '0.75em';
+                btn.style.padding = '0';
+                btn.id = `hyp-${kind}-conf-${q.id}-${label}-p${pIdx}-${i}`;
+                btn.onclick = () => selectHypCheckboxConf(q.id, label, pIdx, kind, i);
                 container.appendChild(btn);
               }
             }
@@ -710,7 +743,7 @@ function buildHypothesisQ(q, displayNum) {
   let html = `<div class="card">
     <div class="hint">
       <span class="hint-icon">i</span>
-      <span>Each system proposes multiple research directions. For each proposal, rate its <strong>novelty</strong>, <strong>groundedness</strong> (specific to our data), and <strong>feasibility</strong>, and tick whether it's worth investigating. You can select both, either, or none of the checkboxes for each proposal.</span>
+      <span>Each system proposes multiple research directions. For each proposal, rate its <strong>novelty</strong>, <strong>groundedness</strong> (specific to our data), and <strong>feasibility</strong>, then tick whether it's worth investigating or already being investigated (with confidence). You can select both, either, or none of the checkboxes for each proposal.</span>
       <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
     </div>
     <h2>Q${displayNum}: Future Research Directions</h2>
@@ -751,14 +784,26 @@ function buildHypothesisQ(q, displayNum) {
           </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
-          <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:0.95em;">
-            <input type="checkbox" id="hyp-worth-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#38a169;" onchange="updateHypStatus('${q.id}','${label}')">
-            <strong>Worth investigating</strong>
-          </label>
-          <label style="display:flex; align-items:center; gap:8px; padding:10px 14px; background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; cursor:pointer; font-size:0.95em;">
-            <input type="checkbox" id="hyp-investigating-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#3182ce;" onchange="updateHypStatus('${q.id}','${label}')">
-            <strong>Already investigating</strong>
-          </label>
+          <div style="background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.95em;">
+              <input type="checkbox" id="hyp-worth-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#38a169;" onchange="toggleHypConf(this,'worth','${q.id}','${label}',${pIdx}); updateHypStatus('${q.id}','${label}')">
+              <strong>Worth investigating</strong>
+            </label>
+            <div id="hyp-worth-conf-${q.id}-${label}-p${pIdx}" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0;">
+              <p style="font-size:0.78em; font-weight:600; color:#4a5568; margin-bottom:4px;">Confidence (0=guess, 10=certain)</p>
+              <div class="conf-buttons" id="hyp-worth-conf-btns-${q.id}-${label}-p${pIdx}"></div>
+            </div>
+          </div>
+          <div style="background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.95em;">
+              <input type="checkbox" id="hyp-investigating-${q.id}-${label}-p${pIdx}" style="width:18px; height:18px; accent-color:#3182ce;" onchange="toggleHypConf(this,'investigating','${q.id}','${label}',${pIdx}); updateHypStatus('${q.id}','${label}')">
+              <strong>Already investigating</strong>
+            </label>
+            <div id="hyp-investigating-conf-${q.id}-${label}-p${pIdx}" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid #e2e8f0;">
+              <p style="font-size:0.78em; font-weight:600; color:#4a5568; margin-bottom:4px;">Confidence (0=guess, 10=certain)</p>
+              <div class="conf-buttons" id="hyp-investigating-conf-btns-${q.id}-${label}-p${pIdx}"></div>
+            </div>
+          </div>
         </div>
         <textarea id="hyp-comment-${q.id}-${label}-p${pIdx}" style="min-height:40px; font-size:0.9em;" placeholder="Comment on this proposal (optional)"></textarea>
       </div>`;
@@ -1325,13 +1370,17 @@ function collectResults() {
           const noveltyBtn = document.querySelector(`#hyp-novelty-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
           const groundednessBtn = document.querySelector(`#hyp-groundedness-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
           const feasibilityBtn = document.querySelector(`#hyp-feasibility-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
+          const worthConfBtn = document.querySelector(`#hyp-worth-conf-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
+          const investigatingConfBtn = document.querySelector(`#hyp-investigating-conf-btns-${q.id}-${label}-p${pIdx} .conf-btn.selected`);
           proposalData.push({
             title: p.title,
             novelty: noveltyBtn ? parseInt(noveltyBtn.textContent) : null,
             groundedness: groundednessBtn ? parseInt(groundednessBtn.textContent) : null,
             feasibility: feasibilityBtn ? parseInt(feasibilityBtn.textContent) : null,
             worth_investigating: document.getElementById(`hyp-worth-${q.id}-${label}-p${pIdx}`)?.checked || false,
+            worth_investigating_confidence: worthConfBtn ? parseInt(worthConfBtn.textContent) : null,
             already_investigating: document.getElementById(`hyp-investigating-${q.id}-${label}-p${pIdx}`)?.checked || false,
+            already_investigating_confidence: investigatingConfBtn ? parseInt(investigatingConfBtn.textContent) : null,
             comment: document.getElementById(`hyp-comment-${q.id}-${label}-p${pIdx}`)?.value || ''
           });
         });
@@ -1463,10 +1512,22 @@ function restoreAnswers(r) {
           if (pd.worth_investigating) {
             const cb = document.getElementById(`hyp-worth-${qid}-${label}-p${pIdx}`);
             if (cb) cb.checked = true;
+            const confDiv = document.getElementById(`hyp-worth-conf-${qid}-${label}-p${pIdx}`);
+            if (confDiv) confDiv.style.display = 'block';
+          }
+          if (pd.worth_investigating_confidence != null) {
+            const btn = document.getElementById(`hyp-worth-conf-${qid}-${label}-p${pIdx}-${pd.worth_investigating_confidence}`);
+            if (btn) btn.classList.add('selected');
           }
           if (pd.already_investigating) {
             const cb = document.getElementById(`hyp-investigating-${qid}-${label}-p${pIdx}`);
             if (cb) cb.checked = true;
+            const confDiv = document.getElementById(`hyp-investigating-conf-${qid}-${label}-p${pIdx}`);
+            if (confDiv) confDiv.style.display = 'block';
+          }
+          if (pd.already_investigating_confidence != null) {
+            const btn = document.getElementById(`hyp-investigating-conf-${qid}-${label}-p${pIdx}-${pd.already_investigating_confidence}`);
+            if (btn) btn.classList.add('selected');
           }
           if (pd.comment) {
             const ta = document.getElementById(`hyp-comment-${qid}-${label}-p${pIdx}`);
@@ -1476,7 +1537,7 @@ function restoreAnswers(r) {
       });
       // Mark Q11 drag-list as touched if any ratings exist, then update status
       const hasAnyRating = Object.values(qr.hypothesis_proposals).some(props =>
-        props.some(pd => pd.novelty != null || pd.groundedness != null || pd.feasibility != null || pd.worth_investigating || pd.already_investigating)
+        props.some(pd => pd.novelty != null || pd.groundedness != null || pd.feasibility != null || pd.worth_investigating || pd.already_investigating || pd.worth_investigating_confidence != null || pd.already_investigating_confidence != null)
       );
       if (hasAnyRating) {
         const dragList = document.getElementById(`drag-list-${qid}`);
