@@ -325,7 +325,7 @@ input[type="text"], input[type="email"] {
 // ============================================================
 // CONFIG
 // ============================================================
-const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbweAIBs7EkWjsq0zBNeeGdqQmaEcCgoaaQaRjct10Iv8EKC54FkRIgAlkAInzyliQ_r/exec';
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbye4RIgebbUhtKT-4nWX1wHTQTeBcnlIdMNaJypKuPMTqBC2ICocOMnO81jIDovwoZejg/exec';
 const AUTOSAVE_INTERVAL = 30000; // 30s auto-save
 
 // ============================================================
@@ -399,8 +399,7 @@ function selectHypRating(qid, label, pIdx, dim, val) {
   if (container) container.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
   const btn = document.getElementById(`hyp-${dim}-${qid}-${label}-p${pIdx}-${val}`);
   if (btn) btn.classList.add('selected');
-  const dragList = document.getElementById(`drag-list-${qid}`);
-  if (dragList) { dragList.dataset.touched = 'true'; updateProgress(); }
+  updateHypStatus(qid, label);
   saveProgressSilent();
 }
 
@@ -409,8 +408,7 @@ function selectHypProposalConf(qid, label, pIdx, val) {
   if (container) container.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
   const btn = document.getElementById(`hyp-proposal-conf-${qid}-${label}-p${pIdx}-${val}`);
   if (btn) btn.classList.add('selected');
-  const dragList = document.getElementById(`drag-list-${qid}`);
-  if (dragList) { dragList.dataset.touched = 'true'; updateProgress(); }
+  updateHypStatus(qid, label);
   saveProgressSilent();
 }
 
@@ -805,6 +803,9 @@ function buildHypothesisQ(q, displayNum) {
     html += `<li class="drag-item" data-label="${label}"><span class="drag-rank-num">${i + 1}</span></li>`;
   });
   html += `</ul>
+    <h3 style="margin-top:20px;">Confidence in your assessment for this question</h3>
+    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
+    <div class="conf-buttons" id="q-conf-btns-${q.id}"></div>
     <h3 style="margin-top:20px;">Notes</h3>
     <textarea id="notes-${q.id}" placeholder="Explain your overall assessment/reasoning (optional)"></textarea>
   </div>`;
@@ -1247,15 +1248,20 @@ function updateHypStatus(qid, label) {
   const panel = document.getElementById(`hyp-panel-${qid}-${label}`);
   const status = document.getElementById(`hyp-status-${qid}-${label}`);
   if (!panel || !status) return;
-  // Count how many proposals have at least one checkbox ticked
-  const checkboxes = panel.querySelectorAll('input[type="checkbox"]');
+  // Count how many proposals have at least one rating OR checkbox interaction
   const proposals = panel.querySelectorAll('[id^="hyp-worth-"]');
   let reviewed = 0;
   const numProposals = proposals.length;
   for (let i = 0; i < numProposals; i++) {
     const worth = document.getElementById(`hyp-worth-${qid}-${label}-p${i}`);
     const investigating = document.getElementById(`hyp-investigating-${qid}-${label}-p${i}`);
-    if ((worth && worth.checked) || (investigating && investigating.checked)) reviewed++;
+    const hasCheckbox = (worth && worth.checked) || (investigating && investigating.checked);
+    // Also count if any rating button was selected
+    const noveltyBtn = document.querySelector(`#hyp-novelty-btns-${qid}-${label}-p${i} .conf-btn.selected`);
+    const groundBtn = document.querySelector(`#hyp-groundedness-btns-${qid}-${label}-p${i} .conf-btn.selected`);
+    const feasBtn = document.querySelector(`#hyp-feasibility-btns-${qid}-${label}-p${i} .conf-btn.selected`);
+    const confBtn = document.querySelector(`#hyp-proposal-conf-btns-${qid}-${label}-p${i} .conf-btn.selected`);
+    if (hasCheckbox || noveltyBtn || groundBtn || feasBtn || confBtn) reviewed++;
   }
   if (reviewed >= numProposals) {
     status.style.background = '#c6f6d5';

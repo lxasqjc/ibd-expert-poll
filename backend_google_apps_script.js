@@ -42,7 +42,7 @@ function doPost(e) {
       let summarySheet = ss.getSheetByName('Summary');
       if (!summarySheet) {
         summarySheet = ss.insertSheet('Summary');
-        summarySheet.appendRow([
+        const headers = [
           'Timestamp', 'Reviewer', 'Expertise',
           'Q1_rank_X', 'Q1_rank_Y', 'Q1_rank_Z', 'Q1_confidence',
           'Q2_rank_X', 'Q2_rank_Y', 'Q2_rank_Z', 'Q2_confidence',
@@ -53,25 +53,49 @@ function doPost(e) {
           'Q7_rank_X', 'Q7_rank_Y', 'Q7_rank_Z', 'Q7_confidence',
           'Q8_rank_X', 'Q8_rank_Y', 'Q8_rank_Z', 'Q8_confidence',
           'Q9_rank_X', 'Q9_rank_Y', 'Q9_rank_Z', 'Q9_confidence',
-          'Q11_rank_X', 'Q11_rank_Y', 'Q11_rank_Z', 'Q11_confidence',
-          'Q12_rank_X', 'Q12_rank_Y', 'Q12_rank_Z', 'Q12_confidence',
-          'Final_directions', 'Final_feedback'
-        ]);
+          'Q10_rank_X', 'Q10_rank_Y', 'Q10_rank_Z', 'Q10_confidence'
+        ];
+        // Q11 hypothesis per-proposal columns
+        const q11Labels = ['X', 'Y'];
+        const q11XCount = 5;
+        const q11YCount = 7;
+        q11Labels.forEach(label => {
+          const count = label === 'X' ? q11XCount : q11YCount;
+          for (let i = 1; i <= count; i++) {
+            headers.push(`Q11_${label}_P${i}_novelty`, `Q11_${label}_P${i}_ground`, `Q11_${label}_P${i}_feas`, `Q11_${label}_P${i}_worth`, `Q11_${label}_P${i}_invest`, `Q11_${label}_P${i}_conf`);
+          }
+        });
+        headers.push('Q11_confidence', 'Final_directions', 'Final_ai_questions', 'Final_feedback', 'Final_other');
+        summarySheet.appendRow(headers);
       }
 
       const row = [
         new Date().toISOString(),
         data.reviewer?.name || '',
-        data.reviewer?.expertise || ''
+        data.reviewer?.field_confidence || ''
       ];
 
-      const qids = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q11','Q12'];
-      qids.forEach(qid => {
+      // Q1-Q10: ranking questions
+      const rankQids = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10'];
+      rankQids.forEach(qid => {
         const q = data.questions?.[qid] || {};
         row.push(q.rankings?.X || '', q.rankings?.Y || '', q.rankings?.Z || '', q.confidence || '');
       });
 
-      row.push(data.final?.directions || '', data.final?.feedback || '');
+      // Q11: hypothesis question — per-proposal ratings
+      const q11 = data.questions?.Q11 || {};
+      const q11Proposals = q11.hypothesis_proposals || {};
+      ['X', 'Y'].forEach(label => {
+        const proposals = q11Proposals[label] || [];
+        const count = label === 'X' ? 5 : 7;
+        for (let i = 0; i < count; i++) {
+          const p = proposals[i] || {};
+          row.push(p.novelty || '', p.groundedness || '', p.feasibility || '', p.worth_investigating ? 'Y' : '', p.already_investigating ? 'Y' : '', p.proposal_confidence || '');
+        }
+      });
+      row.push(q11.confidence || '');
+
+      row.push(data.final?.directions || '', data.final?.ai_questions || '', data.final?.feedback || '', data.final?.other || '');
       summarySheet.appendRow(row);
     }
 
