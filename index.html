@@ -805,9 +805,6 @@ function buildHypothesisQ(q, displayNum) {
     html += `<li class="drag-item" data-label="${label}"><span class="drag-rank-num">${i + 1}</span></li>`;
   });
   html += `</ul>
-    <h3 style="margin-top:20px;">Confidence in your ratings for this question</h3>
-    <p style="font-size:0.85em; color:#718096; margin-bottom:8px;">0 = not confident, 10 = very confident</p>
-    <div class="conf-buttons" id="q-conf-btns-${q.id}"></div>
     <h3 style="margin-top:20px;">Notes</h3>
     <textarea id="notes-${q.id}" placeholder="Explain your overall assessment/reasoning (optional)"></textarea>
   </div>`;
