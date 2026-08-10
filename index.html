@@ -672,7 +672,7 @@ function buildRankingQ(q, displayNum) {
   let html = `<div class="card">
     <div class="hint" id="hint-${q.id}">
       <span class="hint-icon">i</span>
-      <span>Read all ${labels.length} responses, then drag to rank them considering novelty, groundedness, and factfulness.</span>
+      <span>Read all ${labels.length} responses, then drag to rank them considering novelty, groundedness, and factfulness.<br><strong>Novelty</strong> — Are the findings non-trivial? Do they offer insights similar to our Nature fistula paper? (vs generic textbook knowledge)<br><strong>Groundedness</strong> — Are the findings specific to what can be found using data in our paper?<br><strong>Factfulness</strong> — Are the biological claims correct? Are findings supported by evidence?</span>
       <span class="hint-dismiss" onclick="this.parentElement.style.display='none'">x</span>
     </div>
     <h2>Q${displayNum}: ${q.text}</h2>
