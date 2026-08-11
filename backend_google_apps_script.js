@@ -72,6 +72,8 @@ function doPost(e) {
             `Q10_Y_P${i}_worth`, `Q10_Y_P${i}_known`, `Q10_Y_P${i}_conf`
           );
         }
+        // Final questions
+        headers.push('Final_directions', 'Final_ai_questions', 'Final_feedback', 'Final_other');
         summarySheet.appendRow(headers);
       }
 
@@ -107,6 +109,10 @@ function doPost(e) {
         row.push(p.novelty || '', p.groundedness || '', p.feasibility || '',
                  p.worth_investigating || '', p.already_known || '', p.confidence || '');
       }
+
+      // Final questions
+      const fq = data.payload?.final_questions || {};
+      row.push(fq.directions || '', fq.ai_questions || '', fq.feedback || '', fq.other || '');
 
       summarySheet.appendRow(row);
     }
