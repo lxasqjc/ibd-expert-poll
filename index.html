@@ -960,15 +960,26 @@ function sendToBackend(type) {
 }
 
 function loadFromBackend(email) {
+  if (sessionStorage.getItem("ibd_poll_loaded")) return;
   fetch(BACKEND_URL + "?action=load&email=" + encodeURIComponent(email), { mode: "cors" })
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d && d.payload) {
-        if (d.payload.field_confidence !== undefined) state.field_confidence = d.payload.field_confidence;
-        if (d.payload.answers) state.answers = d.payload.answers;
-        if (d.payload.final_questions) state.final_questions = d.payload.final_questions;
-        saveToLocalStorage();
-        location.reload();
+        var changed = false;
+        if (d.payload.field_confidence !== undefined && d.payload.field_confidence !== state.field_confidence) {
+          state.field_confidence = d.payload.field_confidence; changed = true;
+        }
+        if (d.payload.answers && JSON.stringify(d.payload.answers) !== JSON.stringify(state.answers)) {
+          state.answers = d.payload.answers; changed = true;
+        }
+        if (d.payload.final_questions && JSON.stringify(d.payload.final_questions) !== JSON.stringify(state.final_questions)) {
+          state.final_questions = d.payload.final_questions; changed = true;
+        }
+        if (changed) {
+          saveToLocalStorage();
+          sessionStorage.setItem("ibd_poll_loaded", "1");
+          location.reload();
+        }
       }
     })
     .catch(function() {});
