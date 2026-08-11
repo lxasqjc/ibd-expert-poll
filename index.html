@@ -967,27 +967,21 @@ function loadFromBackend(email) {
   var loadKey = "ibd_poll_loaded_" + email.toLowerCase().trim();
   if (sessionStorage.getItem(loadKey)) return;
   sessionStorage.setItem(loadKey, "1");
-  fetch(BACKEND_URL + "?action=load&email=" + encodeURIComponent(email), { mode: "cors" })
+  fetch(BACKEND_URL + "?action=load&email=" + encodeURIComponent(email), { redirect: "follow" })
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d && d.status === "ok" && d.payload) {
-        var changed = false;
-        if (d.payload.field_confidence !== undefined && d.payload.field_confidence !== state.field_confidence) {
-          state.field_confidence = d.payload.field_confidence; changed = true;
-        }
-        if (d.payload.answers && JSON.stringify(d.payload.answers) !== JSON.stringify(state.answers)) {
-          state.answers = d.payload.answers; changed = true;
-        }
-        if (d.payload.final_questions && JSON.stringify(d.payload.final_questions) !== JSON.stringify(state.final_questions)) {
-          state.final_questions = d.payload.final_questions; changed = true;
-        }
-        if (changed) {
+      var payload = (d && d.payload) ? d.payload : (d && d.data) ? d.data : null;
+      if (payload && (payload.answers || payload.field_confidence !== undefined)) {
+        if (confirm("Found saved progress for this email. Restore it?")) {
+          if (payload.field_confidence !== undefined) state.field_confidence = payload.field_confidence;
+          if (payload.answers) state.answers = payload.answers;
+          if (payload.final_questions) state.final_questions = payload.final_questions;
           saveToLocalStorage();
           location.reload();
         }
       }
     })
-    .catch(function() {});
+    .catch(function(e) { console.log("Backend load failed:", e.message); });
 }
 
 function startAutosave() {
