@@ -285,6 +285,7 @@ function init() {
   }
   updateProgress();
   startAutosave();
+  if (state.reviewer_email) loadFromBackend(state.reviewer_email);
 }
 
 function loadFromLocalStorage() {
@@ -329,6 +330,7 @@ function showTab(tabId) {
   const btn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
   if (btn) btn.classList.add("active");
   updateTabStyles();
+  window.scrollTo(0, 0);
 }
 
 function updateTabStyles() {
@@ -427,7 +429,6 @@ function buildLanding() {
       var email = e.target.value.trim();
       if (email) loadFromBackend(email);
     });
-    if (state.reviewer_email) loadFromBackend(state.reviewer_email);
   }, 0);
 }
 
@@ -704,7 +705,7 @@ function buildProposalCard(qId, key, title, body, cssClass, pa) {
 }
 
 function buildNavButtons(idx) {
-  var html = '<div style="display:flex;gap:12px;margin-top:20px;">';
+  var html = '<div style="display:flex;gap:12px;margin-top:20px;align-items:center;">';
   if (idx > 0) {
     var prevId = data.questions[idx - 1].id;
     html += '<button class="btn-primary nav-btn" data-target="' + prevId + '" style="background:#718096;">&larr; Previous</button>';
@@ -715,6 +716,7 @@ function buildNavButtons(idx) {
   } else {
     html += '<button class="btn-primary nav-btn" data-target="final">Final Questions &rarr;</button>';
   }
+  html += '<button class="btn-primary save-progress-btn" style="margin-left:auto;background:#38a169;">Save Progress</button>';
   html += '</div>';
   return html;
 }
@@ -740,9 +742,10 @@ function buildFinalQuestions() {
     '<h3 style="margin-top:20px;">Anything else you want to tell us? <span style="font-size:0.75em; color:#a0aec0; font-weight:400;">(optional)</span></h3>' +
     '<textarea class="reasoning-textarea" id="finalOther" style="min-height:80px;" placeholder="(Optional) Any other comments, suggestions, or observations...">' + escapeHtml(fq.other||"") + '</textarea>' +
     '<div style="margin-top:20px; padding:12px 16px; background:#fefcbf; border:1px solid #f6e05e; border-radius:8px; font-size:0.9em; color:#744210;">Please click "Review &amp; Submit" on the Submit tab when you are finished.</div>' +
-    '<div style="display:flex;gap:12px;margin-top:20px;">' +
+    '<div style="display:flex;gap:12px;margin-top:20px;align-items:center;">' +
       '<button class="btn-primary nav-btn" data-target="' + lastQId + '" style="background:#718096;">&larr; Previous (' + lastQId + ')</button>' +
       '<button class="btn-primary nav-btn" data-target="profile">Review &amp; Submit &rarr;</button>' +
+      '<button class="btn-primary save-progress-btn" style="margin-left:auto;background:#38a169;">Save Progress</button>' +
     '</div>' +
   '</div>';
   container.appendChild(div);
@@ -906,6 +909,17 @@ function attachQuestionEvents() {
       saveToLocalStorage();
     });
   });
+
+  // Save Progress buttons
+  document.querySelectorAll('.save-progress-btn').forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      saveToLocalStorage();
+      sendToBackend("partial");
+      btn.textContent = "Saved!";
+      btn.style.background = "#276749";
+      setTimeout(function() { btn.textContent = "Save Progress"; btn.style.background = "#38a169"; }, 2000);
+    });
+  });
 }
 
 function ensureProposalState(qId, prop) {
@@ -972,10 +986,12 @@ function loadFromBackend(email) {
     .then(function(d) {
       var payload = (d && d.payload) ? d.payload : (d && d.data) ? d.data : null;
       if (payload && (payload.answers || payload.field_confidence !== undefined)) {
-        if (confirm("Found saved progress for this email. Restore it?")) {
+        var ansCount = payload.answers ? Object.keys(payload.answers).length : 0;
+        if (confirm("Found saved progress for this email (" + ansCount + " questions). Restore it?")) {
           if (payload.field_confidence !== undefined) state.field_confidence = payload.field_confidence;
           if (payload.answers) state.answers = payload.answers;
           if (payload.final_questions) state.final_questions = payload.final_questions;
+          state.started = true;
           saveToLocalStorage();
           location.reload();
         }
