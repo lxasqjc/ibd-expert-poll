@@ -423,6 +423,10 @@ function buildLanding() {
     document.getElementById("startBtn").addEventListener("click", startEval);
     document.getElementById("reviewerName").addEventListener("input", e => { state.reviewer_name = e.target.value; saveToLocalStorage(); });
     document.getElementById("reviewerEmail").addEventListener("input", e => { state.reviewer_email = e.target.value; saveToLocalStorage(); });
+    document.getElementById("reviewerEmail").addEventListener("change", e => {
+      var email = e.target.value.trim();
+      if (email) loadFromBackend(email);
+    });
     if (state.reviewer_email) loadFromBackend(state.reviewer_email);
   }, 0);
 }
@@ -960,11 +964,13 @@ function sendToBackend(type) {
 }
 
 function loadFromBackend(email) {
-  if (sessionStorage.getItem("ibd_poll_loaded")) return;
+  var loadKey = "ibd_poll_loaded_" + email.toLowerCase().trim();
+  if (sessionStorage.getItem(loadKey)) return;
+  sessionStorage.setItem(loadKey, "1");
   fetch(BACKEND_URL + "?action=load&email=" + encodeURIComponent(email), { mode: "cors" })
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d && d.payload) {
+      if (d && d.status === "ok" && d.payload) {
         var changed = false;
         if (d.payload.field_confidence !== undefined && d.payload.field_confidence !== state.field_confidence) {
           state.field_confidence = d.payload.field_confidence; changed = true;
@@ -977,7 +983,6 @@ function loadFromBackend(email) {
         }
         if (changed) {
           saveToLocalStorage();
-          sessionStorage.setItem("ibd_poll_loaded", "1");
           location.reload();
         }
       }
