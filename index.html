@@ -645,6 +645,7 @@ function parseProposals(text, arm) {
 }
 
 function splitProposalBody(body) {
+  // Format Y: (a) Hypothesis / (b) Supporting Data / (c) Biological Significance
   var hypMatch = body.match(/\(a\)\s*Hypothesis:\s*\n?([\s\S]*?)(?=\n\s*\(b\)|\n\s*\(c\)|$)/i);
   var supportMatch = body.match(/\(b\)\s*Supporting Data:\s*\n?([\s\S]*?)(?=\n\s*\(c\)|$)/i);
   var sigMatch = body.match(/\(c\)\s*Biological Significance:\s*\n?([\s\S]*?)$/i);
@@ -653,6 +654,16 @@ function splitProposalBody(body) {
       hypothesis: hypMatch[1].trim(),
       details: ((supportMatch ? "(b) Supporting Data:\n" + supportMatch[1].trim() : "") +
                 (sigMatch ? "\n\n(c) Biological Significance:\n" + sigMatch[1].trim() : "")).trim()
+    };
+  }
+  // Format X: Rationale: / Specific Questions: / Key Markers/Pathways:
+  var ratMatch = body.match(/^(?:Rationale:\s*\n?)([\s\S]*?)(?=\n(?:Specific Questions|Key Markers|Novel Aspects|Proposed Analyses|Spatial):|\n*$)/i);
+  if (ratMatch) {
+    var restIdx = ratMatch.index + ratMatch[0].length;
+    var rest = body.slice(restIdx).trim();
+    return {
+      hypothesis: ratMatch[1].trim(),
+      details: rest
     };
   }
   return { hypothesis: body, details: "" };
@@ -665,8 +676,9 @@ function buildProposalCard(qId, key, title, body, cssClass, pa) {
     html += '<p class="proposal-body" style="white-space:pre-wrap;line-height:1.5;">' + escapeHtml(parts.hypothesis) + '</p>';
   }
   if (parts.details) {
+    var detailLabel = /^\(b\)/.test(parts.details) ? "View supporting data &amp; significance" : "View detailed analysis";
     html += '<details style="margin-bottom:12px; border-top:1px solid #e2e8f0; padding-top:8px;">' +
-      '<summary style="cursor:pointer; color:#3182ce; font-weight:600; font-size:0.85em;">View supporting data &amp; significance</summary>' +
+      '<summary style="cursor:pointer; color:#3182ce; font-weight:600; font-size:0.85em;">' + detailLabel + '</summary>' +
       '<div style="margin-top:8px; font-size:0.82em; color:#4a5568; white-space:pre-wrap; max-height:300px; overflow-y:auto;">' + escapeHtml(parts.details) + '</div>' +
     '</details>';
   }
