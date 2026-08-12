@@ -566,19 +566,23 @@ function buildHypothesisHTML(q, idx) {
   var proposalsY = parseProposals(q.responses.Y, "Y");
 
   // Response X proposals
-  html += '<h3 style="color:#5a67d8; margin-top:24px;">Response X Proposals</h3>';
+  html += '<div style="margin-top:24px; padding:12px 16px; background:#ebf4ff; border:1px solid #5a67d8; border-radius:8px 8px 0 0;">' +
+    '<strong style="color:#5a67d8;">System X</strong> — ' + proposalsX.length + ' proposal' + (proposalsX.length !== 1 ? 's' : '') + '</div>';
   proposalsX.forEach(function(p, pi) {
     var key = "x_" + pi;
     var pa = (ans.proposals_x && ans.proposals_x[key]) || {};
-    html += buildProposalCard(q.id, key, p.title, p.body, "x-card", pa);
+    var displayTitle = /^\d+[\.\)]/.test(p.title) ? p.title : "Proposal " + (pi+1) + ": " + p.title;
+    html += buildProposalCard(q.id, key, displayTitle, p.body, "x-card", pa);
   });
 
   // Response Y proposals
-  html += '<h3 style="color:#d69e2e; margin-top:24px;">Response Y Proposals</h3>';
+  html += '<div style="margin-top:24px; padding:12px 16px; background:#fefcf0; border:1px solid #d69e2e; border-radius:8px 8px 0 0;">' +
+    '<strong style="color:#d69e2e;">System Y</strong> — ' + proposalsY.length + ' proposal' + (proposalsY.length !== 1 ? 's' : '') + '</div>';
   proposalsY.forEach(function(p, pi) {
     var key = "y_" + pi;
     var pa = (ans.proposals_y && ans.proposals_y[key]) || {};
-    html += buildProposalCard(q.id, key, p.title, p.body, "y-card", pa);
+    var displayTitle = /^\d+[\.\)]/.test(p.title) ? p.title : "Proposal " + (pi+1) + ": " + p.title;
+    html += buildProposalCard(q.id, key, displayTitle, p.body, "y-card", pa);
   });
 
   // Overall confidence
@@ -609,6 +613,7 @@ function parseProposals(text, arm) {
     var numMatch = line.match(/^(\d+)\.\s+([A-Z][A-Z\s\-\/(),&:]+)/);
     var qMatch = line.match(/^(Q\d+):\s*(.+)/);
     var propMatch = line.match(/^(?:PROPOSAL|Hypothesis|Direction)\s+(\d+)[:\-]\s*(.+)/i);
+    var dashHeader = line.match(/^-{5,}$/);
 
     if (numMatch && numMatch[2].length > 8) {
       if (inProposal) proposals.push({title: currentTitle, body: currentBody.trim()});
@@ -617,7 +622,7 @@ function parseProposals(text, arm) {
       inProposal = true;
     } else if (qMatch) {
       if (inProposal) proposals.push({title: currentTitle, body: currentBody.trim()});
-      currentTitle = qMatch[1] + ": " + qMatch[2].trim();
+      currentTitle = qMatch[2].trim();
       currentBody = "";
       inProposal = true;
     } else if (propMatch) {
@@ -634,25 +639,36 @@ function parseProposals(text, arm) {
   if (inProposal) proposals.push({title: currentTitle, body: currentBody.trim()});
 
   if (proposals.length === 0) {
-    var count = arm === "X" ? 5 : 7;
-    for (var j = 0; j < count; j++) {
-      proposals.push({title: "Proposal " + (j+1), body: ""});
-    }
+    return [{title: "Research Direction", body: text}];
   }
-
-  // Truncate body for display
-  proposals.forEach(function(p) {
-    if (p.body.length > 300) {
-      p.body = p.body.substring(0, 300) + "...";
-    }
-  });
   return proposals;
 }
 
+function splitProposalBody(body) {
+  var hypMatch = body.match(/\(a\)\s*Hypothesis:\s*\n?([\s\S]*?)(?=\n\s*\(b\)|\n\s*\(c\)|$)/i);
+  var supportMatch = body.match(/\(b\)\s*Supporting Data:\s*\n?([\s\S]*?)(?=\n\s*\(c\)|$)/i);
+  var sigMatch = body.match(/\(c\)\s*Biological Significance:\s*\n?([\s\S]*?)$/i);
+  if (hypMatch) {
+    return {
+      hypothesis: hypMatch[1].trim(),
+      details: ((supportMatch ? "(b) Supporting Data:\n" + supportMatch[1].trim() : "") +
+                (sigMatch ? "\n\n(c) Biological Significance:\n" + sigMatch[1].trim() : "")).trim()
+    };
+  }
+  return { hypothesis: body, details: "" };
+}
+
 function buildProposalCard(qId, key, title, body, cssClass, pa) {
+  var parts = splitProposalBody(body);
   var html = '<div class="proposal-card ' + cssClass + '"><h4>' + escapeHtml(title) + '</h4>';
-  if (body) {
-    html += '<p class="proposal-body">' + escapeHtml(body) + '</p>';
+  if (parts.hypothesis) {
+    html += '<p class="proposal-body" style="white-space:pre-wrap;line-height:1.5;">' + escapeHtml(parts.hypothesis) + '</p>';
+  }
+  if (parts.details) {
+    html += '<details style="margin-bottom:12px; border-top:1px solid #e2e8f0; padding-top:8px;">' +
+      '<summary style="cursor:pointer; color:#3182ce; font-weight:600; font-size:0.85em;">View supporting data &amp; significance</summary>' +
+      '<div style="margin-top:8px; font-size:0.82em; color:#4a5568; white-space:pre-wrap; max-height:300px; overflow-y:auto;">' + escapeHtml(parts.details) + '</div>' +
+    '</details>';
   }
   // 3-column rating grid
   html += '<div class="rating-grid">';
