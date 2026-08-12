@@ -498,6 +498,11 @@ function buildComparisonHTML(q, idx) {
   html += '<div class="panels-row">';
   // Panel X
   html += '<div class="panel-x"><div class="panel-label">Response X</div>';
+  if (sem && sem.executive_summary_x) {
+    html += '<div class="exec-summary"><h4>Executive Summary</h4><ul>';
+    sem.executive_summary_x.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
+    html += '</ul></div>';
+  }
   if (ns && ns.X) {
     var parsedX = splitNeutralSummary(ns.X);
     html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(parsedX.interpretation, sem ? sem.shared_points : null) + '</div>';
@@ -515,6 +520,11 @@ function buildComparisonHTML(q, idx) {
   html += '</div>';
   // Panel Y
   html += '<div class="panel-y"><div class="panel-label">Response Y</div>';
+  if (sem && sem.executive_summary_y) {
+    html += '<div class="exec-summary"><h4>Executive Summary</h4><ul>';
+    sem.executive_summary_y.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
+    html += '</ul></div>';
+  }
   if (ns && ns.Y) {
     var parsedY = splitNeutralSummary(ns.Y);
     html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(parsedY.interpretation, sem ? sem.shared_points : null) + '</div>';
