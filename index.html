@@ -105,9 +105,6 @@ h1, h2, h3 { color: #1a202c; }
 .shared-table td { padding: 8px 10px; border-bottom: 1px solid #9ae6b4; vertical-align: top; }
 .shared-table tr:nth-child(even) { background: rgba(255,255,255,0.5); }
 .highlight-term { background: #c6f6d5; padding: 1px 3px; border-radius: 3px; }
-.hl-shared { background: #c6f6d5; border-radius: 3px; }
-.hl-unique-x { background: #e8e0ff; border-radius: 3px; }
-.hl-unique-y { background: #fef3c7; border-radius: 3px; }
 
 /* Unique sections side-by-side with response colours */
 .unique-row { display: flex; gap: 20px; margin-bottom: 12px; }
@@ -271,7 +268,6 @@ function evalCriteriaHTML() {
     '<strong>Novelty</strong> &mdash; Are the findings non-trivial? Do they offer insights similar to <a href="https://www.nature.com/articles/s41586-025-09744-y" target="_blank" style="color:#3182ce;">our Nature fistula paper</a>? (vs generic textbook knowledge)<br>' +
     '<strong>Groundedness</strong> &mdash; Are the findings specific to what can be found using data in our paper?<br>' +
     '<strong>Factfulness</strong> &mdash; Are the biological claims correct? Are findings supported by evidence?<br>' +
-    '<span style="font-size:0.85em;color:#718096;margin-top:6px;display:inline-block;">Highlighting: <span class="hl-shared" style="padding:2px 6px;">shared biology</span> &nbsp; <span class="hl-unique-x" style="padding:2px 6px;">unique to X</span> &nbsp; <span class="hl-unique-y" style="padding:2px 6px;">unique to Y</span></span>' +
     '</div>';
 }
 
@@ -463,35 +459,20 @@ function buildQuestions() {
   setTimeout(attachQuestionEvents, 0);
 }
 
-function highlightSentences(text, sem, arm) {
+function boldTopicSentences(text) {
   var escaped = escapeHtml(text);
-  if (!sem) return escaped;
-  var highlights = [];
-  // Shared sentences — green
-  if (sem.shared_sentences) {
-    sem.shared_sentences.forEach(function(s) {
-      var frag = arm === "X" ? s.x_fragment : s.y_fragment;
-      if (frag) highlights.push({frag: frag, cls: "hl-shared", tip: s.topic});
-    });
-  }
-  // Unique sentences — per-arm colour
-  var uniques = arm === "X" ? sem.unique_x : sem.unique_y;
-  var cls = arm === "X" ? "hl-unique-x" : "hl-unique-y";
-  if (uniques) {
-    uniques.forEach(function(u) {
-      if (u.fragment) highlights.push({frag: u.fragment, cls: cls, tip: u.topic});
-    });
-  }
-  // Sort longest first to avoid partial overlaps
-  highlights.sort(function(a, b) { return b.frag.length - a.frag.length; });
-  highlights.forEach(function(h) {
-    var escapedFrag = escapeHtml(h.frag);
-    var idx = escaped.indexOf(escapedFrag);
-    if (idx >= 0) {
-      escaped = escaped.slice(0, idx) + '<span class="' + h.cls + '" title="' + escapeHtml(h.tip) + '">' + escapedFrag + '</span>' + escaped.slice(idx + escapedFrag.length);
+  // Bold the first sentence of each paragraph to aid scanning
+  var paragraphs = escaped.split(/\n\n+/);
+  return paragraphs.map(function(p) {
+    p = p.trim();
+    if (!p) return '';
+    // Find first sentence end: period followed by space and uppercase letter
+    var m = p.match(/^(.+?\.) ([A-Z])/);
+    if (m) {
+      return '<strong>' + m[1] + '</strong> ' + m[2] + p.slice(m[0].length);
     }
-  });
-  return escaped;
+    return '<strong>' + p + '</strong>';
+  }).join('\n\n');
 }
 
 function splitNeutralSummary(text) {
@@ -523,7 +504,7 @@ function buildComparisonHTML(q, idx) {
   }
   if (ns && ns.X) {
     var parsedX = splitNeutralSummary(ns.X);
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightSentences(parsedX.interpretation, sem, "X") + '</div>';
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + boldTopicSentences(parsedX.interpretation) + '</div>';
     html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
     if (parsedX.keyFindings) {
       html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + escapeHtml(parsedX.keyFindings) + '</div>';
@@ -545,7 +526,7 @@ function buildComparisonHTML(q, idx) {
   }
   if (ns && ns.Y) {
     var parsedY = splitNeutralSummary(ns.Y);
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightSentences(parsedY.interpretation, sem, "Y") + '</div>';
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + boldTopicSentences(parsedY.interpretation) + '</div>';
     html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
     if (parsedY.keyFindings) {
       html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + escapeHtml(parsedY.keyFindings) + '</div>';
