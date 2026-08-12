@@ -104,6 +104,7 @@ h1, h2, h3 { color: #1a202c; }
 .shared-table th { background: #38a169; color: white; padding: 8px 10px; text-align: left; }
 .shared-table td { padding: 8px 10px; border-bottom: 1px solid #9ae6b4; vertical-align: top; }
 .shared-table tr:nth-child(even) { background: rgba(255,255,255,0.5); }
+.highlight-term { background: #c6f6d5; padding: 1px 3px; border-radius: 3px; }
 
 /* Unique sections side-by-side with response colours */
 .unique-row { display: flex; gap: 20px; margin-bottom: 12px; }
@@ -459,6 +460,22 @@ function buildQuestions() {
   setTimeout(attachQuestionEvents, 0);
 }
 
+function highlightTermsInText(text, sharedPoints) {
+  if (!sharedPoints || sharedPoints.length === 0) return escapeHtml(text);
+  var terms = [];
+  sharedPoints.forEach(function(sp) {
+    var words = sp.topic.split(/[\s\/,]+/).filter(function(w) { return w.length > 3; });
+    words.forEach(function(w) { if (terms.indexOf(w) === -1) terms.push(w); });
+  });
+  terms.sort(function(a, b) { return b.length - a.length; });
+  var escaped = escapeHtml(text);
+  terms.forEach(function(term) {
+    var re = new RegExp('\\b(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')\\b', 'gi');
+    escaped = escaped.replace(re, '<span class="highlight-term">$1</span>');
+  });
+  return escaped;
+}
+
 function buildComparisonHTML(q, idx) {
   const sem = q.semantic;
   const ans = state.answers[q.id] || {};
@@ -472,63 +489,27 @@ function buildComparisonHTML(q, idx) {
   // Panel X
   html += '<div class="panel-x"><div class="panel-label">Response X</div>';
   if (sem && sem.executive_summary_x) {
-    html += '<div class="exec-summary"><h4>Executive Summary</h4><ul>';
+    html += '<div class="exec-summary"><h4>Key Points</h4><ul>';
     sem.executive_summary_x.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
     html += '</ul></div>';
   }
-  html += '<details class="response-toggle"><summary>Show Full Response Text</summary>';
-  html += '<div class="response-text">' + escapeHtml(q.responses.X) + '</div>';
+  html += '<details class="response-toggle"><summary>Show Full Response (shared terms highlighted)</summary>';
+  html += '<div class="response-text">' + highlightTermsInText(q.responses.X, sem ? sem.shared_points : null) + '</div>';
   html += '</details>';
   html += '<button class="btn-view-full" data-q="' + q.id + '" data-arm="X">View in Modal</button>';
   html += '</div>';
   // Panel Y
   html += '<div class="panel-y"><div class="panel-label">Response Y</div>';
   if (sem && sem.executive_summary_y) {
-    html += '<div class="exec-summary"><h4>Executive Summary</h4><ul>';
+    html += '<div class="exec-summary"><h4>Key Points</h4><ul>';
     sem.executive_summary_y.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
     html += '</ul></div>';
   }
-  html += '<details class="response-toggle"><summary>Show Full Response Text</summary>';
-  html += '<div class="response-text">' + escapeHtml(q.responses.Y) + '</div>';
+  html += '<details class="response-toggle"><summary>Show Full Response (shared terms highlighted)</summary>';
+  html += '<div class="response-text">' + highlightTermsInText(q.responses.Y, sem ? sem.shared_points : null) + '</div>';
   html += '</details>';
   html += '<button class="btn-view-full" data-q="' + q.id + '" data-arm="Y">View in Modal</button>';
   html += '</div></div>';
-
-  // Semantic diff
-  if (sem) {
-    html += '<button class="toggle-diff-btn" data-q="' + q.id + '">Toggle Diff View</button>';
-    html += '<div class="semantic-panel" id="diff-' + q.id + '">';
-    // Shared
-    if (sem.shared_points && sem.shared_points.length > 0) {
-      html += '<div class="shared-section"><h4>Shared Points</h4><table class="shared-table"><tr><th>Topic</th><th>Response X</th><th>Response Y</th></tr>';
-      sem.shared_points.forEach(function(sp) {
-        html += '<tr><td><strong>' + escapeHtml(sp.topic) + '</strong></td><td>' + escapeHtml(sp.x_text) + '</td><td>' + escapeHtml(sp.y_text) + '</td></tr>';
-      });
-      html += '</table></div>';
-    }
-    // Unique X and Y side-by-side
-    var hasUX = sem.unique_x && sem.unique_x.length > 0;
-    var hasUY = sem.unique_y && sem.unique_y.length > 0;
-    if (hasUX || hasUY) {
-      html += '<div class="unique-row">';
-      if (hasUX) {
-        html += '<div class="unique-section unique-x"><h4>Unique to Response X</h4>';
-        sem.unique_x.forEach(function(u) {
-          html += '<div class="unique-item"><strong>' + escapeHtml(u.topic) + '</strong><p>' + escapeHtml(u.text) + '</p></div>';
-        });
-        html += '</div>';
-      }
-      if (hasUY) {
-        html += '<div class="unique-section unique-y"><h4>Unique to Response Y</h4>';
-        sem.unique_y.forEach(function(u) {
-          html += '<div class="unique-item"><strong>' + escapeHtml(u.topic) + '</strong><p>' + escapeHtml(u.text) + '</p></div>';
-        });
-        html += '</div>';
-      }
-      html += '</div>';
-    }
-    html += '</div>';
-  }
 
   // Preference (NO "About equal")
   html += '<div class="pref-section"><h3>Your Evaluation</h3>';
@@ -805,12 +786,6 @@ function attachQuestionEvents() {
     });
   });
 
-  // Toggle diff buttons
-  document.querySelectorAll('.toggle-diff-btn').forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      toggleDiff(btn.dataset.q);
-    });
-  });
 
   // Preference radios
   document.querySelectorAll('input[name^="pref-"]').forEach(function(r) {
@@ -946,11 +921,6 @@ document.getElementById("modalOverlay").addEventListener("click", function(e) {
   }
 });
 
-// ---- Toggle Diff ----
-function toggleDiff(qId) {
-  var el = document.getElementById("diff-" + qId);
-  if (el) el.style.display = el.style.display === "none" ? "block" : "none";
-}
 
 // ---- Backend ----
 function sendToBackend(type) {
