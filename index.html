@@ -476,6 +476,15 @@ function highlightTermsInText(text, sharedPoints) {
   return escaped;
 }
 
+function splitNeutralSummary(text) {
+  var interpIdx = text.indexOf("Biological Interpretation:");
+  if (interpIdx === -1) return { keyFindings: "", interpretation: text };
+  var kfRaw = text.slice(0, interpIdx);
+  var interp = text.slice(interpIdx + "Biological Interpretation:".length).trim();
+  kfRaw = kfRaw.replace(/^BIOLOGICAL FINDINGS SUMMARY\s*\n*/, "").replace(/^Key Findings:\s*\n?/, "").trim();
+  return { keyFindings: kfRaw, interpretation: interp };
+}
+
 function buildComparisonHTML(q, idx) {
   const sem = q.semantic;
   const ns = q.neutral_summary;
@@ -489,31 +498,37 @@ function buildComparisonHTML(q, idx) {
   html += '<div class="panels-row">';
   // Panel X
   html += '<div class="panel-x"><div class="panel-label">Response X</div>';
-  if (sem && sem.executive_summary_x) {
-    html += '<div class="exec-summary"><h4>Key Points</h4><ul>';
-    sem.executive_summary_x.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
-    html += '</ul></div>';
-  }
   if (ns && ns.X) {
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(ns.X, sem ? sem.shared_points : null) + '</div>';
+    var parsedX = splitNeutralSummary(ns.X);
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(parsedX.interpretation, sem ? sem.shared_points : null) + '</div>';
+    html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
+    if (parsedX.keyFindings) {
+      html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + highlightTermsInText(parsedX.keyFindings, sem ? sem.shared_points : null) + '</div>';
+    }
+    html += '<div class="response-text">' + highlightTermsInText(q.responses.X, sem ? sem.shared_points : null) + '</div>';
+    html += '</details>';
+  } else {
+    html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
+    html += '<div class="response-text">' + highlightTermsInText(q.responses.X, sem ? sem.shared_points : null) + '</div>';
+    html += '</details>';
   }
-  html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
-  html += '<div class="response-text">' + highlightTermsInText(q.responses.X, sem ? sem.shared_points : null) + '</div>';
-  html += '</details>';
   html += '</div>';
   // Panel Y
   html += '<div class="panel-y"><div class="panel-label">Response Y</div>';
-  if (sem && sem.executive_summary_y) {
-    html += '<div class="exec-summary"><h4>Key Points</h4><ul>';
-    sem.executive_summary_y.bullets.forEach(function(b) { html += '<li>' + escapeHtml(b) + '</li>'; });
-    html += '</ul></div>';
-  }
   if (ns && ns.Y) {
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(ns.Y, sem ? sem.shared_points : null) + '</div>';
+    var parsedY = splitNeutralSummary(ns.Y);
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + highlightTermsInText(parsedY.interpretation, sem ? sem.shared_points : null) + '</div>';
+    html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
+    if (parsedY.keyFindings) {
+      html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + highlightTermsInText(parsedY.keyFindings, sem ? sem.shared_points : null) + '</div>';
+    }
+    html += '<div class="response-text">' + highlightTermsInText(q.responses.Y, sem ? sem.shared_points : null) + '</div>';
+    html += '</details>';
+  } else {
+    html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
+    html += '<div class="response-text">' + highlightTermsInText(q.responses.Y, sem ? sem.shared_points : null) + '</div>';
+    html += '</details>';
   }
-  html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
-  html += '<div class="response-text">' + highlightTermsInText(q.responses.Y, sem ? sem.shared_points : null) + '</div>';
-  html += '</details>';
   html += '</div></div>';
 
   // Preference (NO "About equal")
@@ -538,7 +553,6 @@ function buildComparisonHTML(q, idx) {
 
 function buildHypothesisHTML(q, idx) {
   const ans = state.answers[q.id] || { proposals_x: {}, proposals_y: {} };
-  const ns = q.neutral_summary;
   let html = '<div class="question-text"><strong>' + q.id + ' (Hypothesis Generation):</strong> ' + escapeHtml(q.text) + '</div>';
 
   // Eval criteria for hypothesis
@@ -546,26 +560,6 @@ function buildHypothesisHTML(q, idx) {
     'Each system proposes multiple research directions. For each proposal, rate its <strong>novelty</strong>, <strong>groundedness</strong>, and <strong>feasibility</strong>, then tick whether it is worth investigating or already being investigated.<br>' +
     '<strong>Novelty</strong> (0=known, 10=similar to our Nature fistula paper) &mdash; <strong>Groundedness</strong> (0=generic, 10=specific to our data) &mdash; <strong>Feasibility</strong> (0=impossible on our data, 10=highly feasible)' +
   '</div>';
-
-  // Side-by-side response panels
-  html += '<div class="panels-row">';
-  html += '<div class="panel-x"><div class="panel-label">Response X</div>';
-  if (ns && ns.X) {
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + escapeHtml(ns.X) + '</div>';
-  }
-  html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
-  html += '<div class="response-text">' + escapeHtml(q.responses.X) + '</div>';
-  html += '</details>';
-  html += '</div>';
-  html += '<div class="panel-y"><div class="panel-label">Response Y</div>';
-  if (ns && ns.Y) {
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + escapeHtml(ns.Y) + '</div>';
-  }
-  html += '<details class="response-toggle"><summary>Show Full Raw Output</summary>';
-  html += '<div class="response-text">' + escapeHtml(q.responses.Y) + '</div>';
-  html += '</details>';
-  html += '</div>';
-  html += '</div>';
 
   // Parse proposals
   var proposalsX = parseProposals(q.responses.X, "X");
