@@ -459,20 +459,8 @@ function buildQuestions() {
   setTimeout(attachQuestionEvents, 0);
 }
 
-function boldTopicSentences(text) {
-  var escaped = escapeHtml(text);
-  // Bold the first sentence of each paragraph to aid scanning
-  var paragraphs = escaped.split(/\n\n+/);
-  return paragraphs.map(function(p) {
-    p = p.trim();
-    if (!p) return '';
-    // Find first sentence end: period followed by space and uppercase letter
-    var m = p.match(/^(.+?\.) ([A-Z])/);
-    if (m) {
-      return '<strong>' + m[1] + '</strong> ' + m[2] + p.slice(m[0].length);
-    }
-    return '<strong>' + p + '</strong>';
-  }).join('\n\n');
+function formatInterpretation(text) {
+  return escapeHtml(text);
 }
 
 function splitNeutralSummary(text) {
@@ -504,7 +492,7 @@ function buildComparisonHTML(q, idx) {
   }
   if (ns && ns.X) {
     var parsedX = splitNeutralSummary(ns.X);
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + boldTopicSentences(parsedX.interpretation) + '</div>';
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + formatInterpretation(parsedX.interpretation) + '</div>';
     html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
     if (parsedX.keyFindings) {
       html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + escapeHtml(parsedX.keyFindings) + '</div>';
@@ -526,7 +514,7 @@ function buildComparisonHTML(q, idx) {
   }
   if (ns && ns.Y) {
     var parsedY = splitNeutralSummary(ns.Y);
-    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + boldTopicSentences(parsedY.interpretation) + '</div>';
+    html += '<div class="response-text" style="margin:10px 0;white-space:pre-wrap;font-size:0.88rem;line-height:1.6;">' + formatInterpretation(parsedY.interpretation) + '</div>';
     html += '<details class="response-toggle"><summary>Show Key Findings &amp; Full Raw Output</summary>';
     if (parsedY.keyFindings) {
       html += '<div style="margin-bottom:12px;padding:12px;background:#f7fafc;border:1px solid #e2e8f0;border-radius:6px;white-space:pre-wrap;font-size:0.85rem;line-height:1.5;">' + escapeHtml(parsedY.keyFindings) + '</div>';
